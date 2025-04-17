@@ -7,5 +7,4 @@ chapters:
 - file: markov-chains
 - file: koopman-operator
 - file: data-driven-koopman
-- file: conformal-prediction
 - file: references
