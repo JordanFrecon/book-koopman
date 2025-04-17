@@ -444,7 +444,7 @@ This section introduces several important extensions that address them.
 
 A natural improvement to EDMD is to promote **sparsity** in the learned Koopman matrix, selecting only the most relevant observables. This is especially helpful when using a large dictionary (e.g., high-degree polynomials or many basis functions), where overfitting and interpretability become concerns.
 
-Sparse variants introduce regularization into the Koopman regression problem, encouraging the elimination of unnecessary terms. This idea has been employed for DMD in {cite}`2014_Jovanovic_M_j-pf_sparsity-dmd` and later ....
+Sparse variants introduce regularization into the Koopman regression problem, encouraging the elimination of unnecessary terms. This idea has been employed for DMD in {cite}`2014_Jovanovic_M_j-pf_sparsity-dmd` and later for EDMD (see {cite}`2021_Pan_S_j-fm_sparsity-koopman` and references therein). Hereafter, we report simple variants to understand the selection mechanism.
 
 ```{admonition} Definition: *Sparse EDMD*
 :class: note
