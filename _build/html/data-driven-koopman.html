@@ -1,0 +1,1061 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Data-Driven Approximation of the Koopman Operator &#8212; Research notes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'data-driven-koopman';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Conformal Prediction" href="conformal-prediction.html" />
+    <link rel="prev" title="Deterministic Dynamics and Koopman Operators" href="koopman-operator.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Research notes - Home"/>
+    <img src="_static/logo.png" class="logo__image only-dark pst-js-only" alt="Research notes - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="markov-chains.html">Stochastic Dynamics and Markov Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="koopman-operator.html">Deterministic Dynamics and Koopman Operators</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Data-Driven Approximation of the Koopman Operator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conformal-prediction.html">Conformal Prediction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fdata-driven-koopman.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/data-driven-koopman.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Data-Driven Approximation of the Koopman Operator</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conceptual-foundations">Conceptual Foundations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#from-data-to-koopman-approximation">From Data to Koopman Approximation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-case-van-der-pol-oscillator">Use-Case: Van der Pol Oscillator</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#model">Model</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#simulating-trajectories">Simulating Trajectories</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-space-visualization">Phase Space Visualization</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#observable-functions">Observable Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extended-dynamic-mode-decomposition-edmd">Extended Dynamic Mode Decomposition (EDMD)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#methodology">Methodology</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#numerical-implementation">Numerical Implementation</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#naive-method-pseudoinverse">Naive Method (Pseudoinverse)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#gramian-based-method-normal-equations">Gramian-Based Method (Normal Equations)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#beyond-edmd">Beyond EDMD</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-edmd">Sparse EDMD</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-edmd">Kernel EDMD</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#edmd-with-learned-observables">EDMD with Learned Observables</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="data-driven-approximation-of-the-koopman-operator">
+<h1>Data-Driven Approximation of the Koopman Operator<a class="headerlink" href="#data-driven-approximation-of-the-koopman-operator" title="Link to this heading">#</a></h1>
+<p>In many real-world scenarios, the exact equations governing a dynamical system are unknown or too complex to model directly. Instead, we often have access to time-series data—sequences of observations or measurements collected over time. The challenge then becomes: how can we extract meaningful models from this data that capture the underlying dynamics?</p>
+<p>The Koopman operator framework offers a powerful approach to this problem. By representing nonlinear dynamical systems through a linear operator acting on a space of observable functions, it enables the use of linear techniques to analyze and predict nonlinear behavior. This is particularly valuable in fields such as fluid dynamics, robotics, neuroscience, and power systems, where data is abundant, but models are difficult to derive from first principles.</p>
+<section id="conceptual-foundations">
+<h2>Conceptual Foundations<a class="headerlink" href="#conceptual-foundations" title="Link to this heading">#</a></h2>
+<section id="from-data-to-koopman-approximation">
+<h3>From Data to Koopman Approximation<a class="headerlink" href="#from-data-to-koopman-approximation" title="Link to this heading">#</a></h3>
+<p>Hereafter, we assume that we do not have access to the full dynamical system <span class="math notranslate nohighlight">\( T : \mathcal{X} \to \mathcal{X} \)</span> nor to the Koopman operator <span class="math notranslate nohighlight">\( \mathcal{K} f = f \circ T \)</span>. Instead, we are given a set of <span class="math notranslate nohighlight">\(n\)</span> state pairs <span class="math notranslate nohighlight">\( (x_t, x_t') \)</span> with <span class="math notranslate nohighlight">\( x_t' \approx T(x_t) \)</span>, and a set of observable functions <span class="math notranslate nohighlight">\( \{f_1, \dots, f_m\} \subset L^2_\mu(\mathcal{X}) \)</span> evaluated at these points. Importantly, we do not need the full state — only the values of these observables. This makes the approach applicable even when measurements are indirect or partial.</p>
+<div class="tip admonition">
+<p class="admonition-title">Remark: Choosing Observables</p>
+<p>In practice, the choice of observable functions <span class="math notranslate nohighlight">\( \{f_1, \dots, f_m\} \)</span> determines how well the Koopman approximation captures the dynamics. Popular choices include:</p>
+<ul class="simple">
+<li><p>Polynomials,</p></li>
+<li><p>Trigonometric functions (for periodic systems),</p></li>
+<li><p>Custom features (e.g. from neural nets or sensors).</p></li>
+</ul>
+<p>The expressivity of <span class="math notranslate nohighlight">\( \mathcal{F}_m \)</span> is crucial to capturing meaningful dynamics.</p>
+</div>
+<p>From these evaluations, we define the subspace</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{F}_m := \operatorname{span}\{f_1, \dots, f_m\} \subset L^2_\mu(\mathcal{X}),
+\]</div>
+<p>and aim to construct a finite-dimensional operator <span class="math notranslate nohighlight">\( K : \mathcal{F}_m \to \mathcal{F}_m \)</span> that approximates the action of the infinite-dimensional Koopman operator.</p>
+<p>To clarify what this means, it is essential to distinguish between the following operators:</p>
+<ul>
+<li><p><strong>True Koopman operator</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+  \mathcal{K} f = f \circ T \quad \text{for } f \in L^2_\mu.
+  \]</div>
+</li>
+<li><p><strong>Restriction to the subspace</strong> <span class="math notranslate nohighlight">\( \mathcal{F}_m \)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+  \mathcal{K}|_{\mathcal{F}_m} : \mathcal{F}_m \to L^2_\mu, \quad f \mapsto f \circ T.
+  \]</div>
+<p>This gives the true action on each basis function, but the result typically lies <strong>outside</strong> of <span class="math notranslate nohighlight">\( \mathcal{F}_m \)</span>.</p>
+</li>
+<li><p><strong>Projected operator</strong> (finite approximation):</p>
+<div class="math notranslate nohighlight">
+\[
+  K := \mathcal{P}_m \mathcal{K}|_{\mathcal{F}_m} : \mathcal{F}_m \to \mathcal{F}_m,
+  \]</div>
+<p>where <span class="math notranslate nohighlight">\( \mathcal{P}_m \)</span> is the orthogonal projection onto <span class="math notranslate nohighlight">\( \mathcal{F}_m \)</span> in <span class="math notranslate nohighlight">\( L^2_\mu \)</span>.</p>
+</li>
+</ul>
+<div class="tip admonition">
+<p class="admonition-title">Important</p>
+<p>The Koopman operator <span class="math notranslate nohighlight">\( \mathcal{K} \)</span> is infinite-dimensional.<br />
+The projected operator <span class="math notranslate nohighlight">\( K \)</span> is finite-dimensional and computable. It approximates the action of <span class="math notranslate nohighlight">\( \mathcal{K} \)</span> on the chosen observable space <span class="math notranslate nohighlight">\( \mathcal{F}_m \)</span>.</p>
+</div>
+<p>We now provide an informal theorem that sets the stage for understanding the objectives of data-driven methods.</p>
+<div class="important admonition">
+<p class="admonition-title">Informal Theorem: Desired Convergence of Finite-Dimensional Approximations</p>
+<p>Given a dynamical system <span class="math notranslate nohighlight">\( T: \mathcal{X} \to \mathcal{X} \)</span> and a sequence of finite-dimensional subspaces <span class="math notranslate nohighlight">\( \mathcal{F}_m \subset L^2_\mu(\mathcal{X}) \)</span> spanned by observables <span class="math notranslate nohighlight">\( \{f_1, \dots, f_m\} \)</span>, we aim to construct finite-dimensional operators <span class="math notranslate nohighlight">\( K_m: \mathcal{F}_m \to \mathcal{F}_m \)</span> that approximate the Koopman operator <span class="math notranslate nohighlight">\( \mathcal{K} \)</span> such that:</p>
+<div class="math notranslate nohighlight">
+\[
+\lim_{m \to \infty} \| K_m f - \mathcal{K} f \|_{L^2_\mu} = 0 \quad \text{for all } f \in L^2_\mu(\mathcal{X}).
+\]</div>
+<p>This convergence is desired in the strong operator topology, meaning that the action of <span class="math notranslate nohighlight">\( K_m \)</span> on any function <span class="math notranslate nohighlight">\( f \)</span> in <span class="math notranslate nohighlight">\( L^2_\mu \)</span> approaches that of <span class="math notranslate nohighlight">\( \mathcal{K} \)</span> as <span class="math notranslate nohighlight">\( m \to \infty \)</span>.</p>
+</div>
+<p>The formal convergence results, such as those by Korda and Mezić, provide the rigorous mathematical foundation for these approximations. We will delve into these formal results in the latter sections, where we discuss the conditions under which such convergence is guaranteed.</p>
+</section>
+<section id="use-case-van-der-pol-oscillator">
+<h3>Use-Case: Van der Pol Oscillator<a class="headerlink" href="#use-case-van-der-pol-oscillator" title="Link to this heading">#</a></h3>
+<p>The <strong>Van der Pol oscillator</strong> is a classical nonlinear dynamical system known for its self-sustained oscillations and limit cycle behavior. It is widely used as a benchmark for analyzing nonlinear systems and testing operator-learning methods such as EDMD.</p>
+<section id="model">
+<h4>Model<a class="headerlink" href="#model" title="Link to this heading">#</a></h4>
+<p>The Van der Pol system is defined by the second-order ODE:</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{d^2u}{dt^2} - \mu(1 - u^2)\frac{du}{dt} + u = 0,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\( u(t) \)</span> is the position and <span class="math notranslate nohighlight">\( \mu &gt; 0 \)</span> controls the nonlinearity and damping. To recast this as a first-order system, we introduce <span class="math notranslate nohighlight">\( v = \dot{u} \)</span>, so that the state becomes <span class="math notranslate nohighlight">\( x = [u, v]^\top \in \mathbb{R}^2 \)</span>. The system then reads:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{cases}
+\dot{u} = v, \\
+\dot{v} = \mu(1 - u^2)v - u.
+\end{cases}
+\end{split}\]</div>
+<p>In our numerical experiments, we take <span class="math notranslate nohighlight">\( \mu = 1 \)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Step 1: Define the Van der Pol oscillator</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">vdp</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">z</span>
+    <span class="n">du</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="n">dv</span> <span class="o">=</span> <span class="n">mu</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">u</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">v</span> <span class="o">-</span> <span class="n">u</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">du</span><span class="p">,</span> <span class="n">dv</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="simulating-trajectories">
+<h4>Simulating Trajectories<a class="headerlink" href="#simulating-trajectories" title="Link to this heading">#</a></h4>
+<p>We simulate the system over a fixed time grid with initial condition <span class="math notranslate nohighlight">\( x_0 = [2.0, 0.0] \)</span>. The numerical solution provides snapshots <span class="math notranslate nohighlight">\( x_t = (u(t), v(t)) \)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_ivp</span>
+
+<span class="c1"># Step 2: Simulate trajectory</span>
+<span class="n">t_eval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">z0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+<span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">vdp</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="n">z0</span><span class="p">,</span> <span class="n">t_eval</span><span class="o">=</span><span class="n">t_eval</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">T</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>        <span class="c1"># (u, v) at time t</span>
+<span class="n">X_prime</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>   <span class="c1"># (u, v) at time t + Δt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Each row of <code class="docutils literal notranslate"><span class="pre">X</span></code> contains the state <span class="math notranslate nohighlight">\( x_t = [u_t, v_t] \)</span>, and <code class="docutils literal notranslate"><span class="pre">X_prime</span></code> contains the corresponding next states <span class="math notranslate nohighlight">\( x_{t+1} \)</span>. In other words,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+X = \begin{bmatrix}
+x_0 \\
+x_1 \\
+\vdots \\
+x_{n-1}
+\end{bmatrix}, \quad
+X' = \begin{bmatrix}
+x_1 \\
+x_2 \\
+\vdots \\
+x_n
+\end{bmatrix}.
+\end{split}\]</div>
+</section>
+<section id="phase-space-visualization">
+<h4>Phase Space Visualization<a class="headerlink" href="#phase-space-visualization" title="Link to this heading">#</a></h4>
+<p>To understand the behavior of the system, we plot its phase portrait: <span class="math notranslate nohighlight">\( u(t) \)</span> versus <span class="math notranslate nohighlight">\( v(t) \)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Step 3: Plot the phase space trajectory</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;True trajectory&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$u$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\dot</span><span class="si">{u}</span><span class="s2">=v$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Van der Pol Oscillator: Phase Space&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/6dc8f5c74225d6e907bb34d6264f1490a9bb34a20d362926244b38a0c7c6c878.png" src="_images/6dc8f5c74225d6e907bb34d6264f1490a9bb34a20d362926244b38a0c7c6c878.png" />
+</div>
+</div>
+</section>
+<section id="observable-functions">
+<h4>Observable Functions<a class="headerlink" href="#observable-functions" title="Link to this heading">#</a></h4>
+<p>To approximate the Koopman operator, we lift the dynamics into a finite-dimensional space of observables. We use polynomial observables in the variables <span class="math notranslate nohighlight">\( u \)</span> and <span class="math notranslate nohighlight">\( v \)</span>, drawn from the space of total-degree polynomials:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{F}_m = \text{span}\{f_1, \dots, f_m\}, \quad f_j(u, v) \in \mathbb{P}_d(u, v),
+\]</div>
+<p>where <span class="math notranslate nohighlight">\( \mathbb{P}_d(u, v) \)</span> denotes the set of bivariate polynomials of total degree at most <span class="math notranslate nohighlight">\( d \)</span>. For instance:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\( d = 2 \)</span>: includes <span class="math notranslate nohighlight">\( 1, u, v, u^2, uv, v^2 \)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\( d = 10 \)</span>: includes all monomials like <span class="math notranslate nohighlight">\( u^4 v^3 \)</span>, up to total degree 10</p></li>
+</ul>
+<p>We define the feature map <span class="math notranslate nohighlight">\( f : \mathbb{R}^2 \to \mathbb{R}^m \)</span> as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+f(x) = \begin{bmatrix}
+f_1(u, v) \\
+\vdots \\
+f_m(u, v)
+\end{bmatrix},
+\quad \text{where } x = [u, v]^\top.
+\end{split}\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">PolynomialFeatures</span>
+
+<span class="c1"># Step 4: Define polynomial dictionary (e.g., degree 8)</span>
+<span class="n">poly</span> <span class="o">=</span> <span class="n">PolynomialFeatures</span><span class="p">(</span><span class="n">degree</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">include_bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>       <span class="c1"># shape (n-1, m)</span>
+<span class="n">F_prime</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_prime</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The finite-approximation thus reads:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+F = \begin{bmatrix}
+f(x_0)^\top \\
+\vdots \\
+f(x_{n-1})^\top
+\end{bmatrix}
+\in \mathbb{R}^{n \times m},
+\quad
+F' = \begin{bmatrix}
+f(x_1)^\top \\
+\vdots \\
+f(x_n)^\top
+\end{bmatrix}
+\in \mathbb{R}^{n \times m}.
+\end{split}\]</div>
+</section>
+</section>
+</section>
+<section id="extended-dynamic-mode-decomposition-edmd">
+<h2>Extended Dynamic Mode Decomposition (EDMD)<a class="headerlink" href="#extended-dynamic-mode-decomposition-edmd" title="Link to this heading">#</a></h2>
+<section id="methodology">
+<h3>Methodology<a class="headerlink" href="#methodology" title="Link to this heading">#</a></h3>
+<p>The first approach to provide a finite-approximations of the Koopman operator was done in <span id="id1">[<a class="reference internal" href="references.html#id4" title="Matthew O. Williams, Ioannis G. Kevrekidis, and Clarence W. Rowley. A data–driven approximation of the koopman operator: extending dynamic mode decomposition. Journal of Nonlinear Science, 25(6):1307–1346, June 2015. doi:10.1007/s00332-015-9258-5.">WKR15</a>]</span> by extending the <em>Dynamic Mode Decomposition</em> (DMD) to non-linear dynamics. It is defined as follows.</p>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>EDMD</em></p>
+<p>The EDMD operator is chosen as</p>
+<div class="math notranslate nohighlight">
+\[
+K = \underset{K\in\mathbb{R}^{m\times m}}{\mathrm{argmin}}\; \|F' - K F\|_F^2.
+\]</div>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Remark: EDMD generalizes DMD</p>
+<p>If the observables are simply the coordinate functions <span class="math notranslate nohighlight">\( f_i(x) = x_i \)</span>, then <span class="math notranslate nohighlight">\( f(x) = x \)</span>, and the matrices <span class="math notranslate nohighlight">\( F \)</span> and <span class="math notranslate nohighlight">\( F' \)</span> consist of raw state snapshots. In this case, EDMD reduces exactly to DMD.</p>
+</div>
+<p>We emphasize that EDMD does <strong>not</strong> recover the full Koopman operator. It approximates how the Koopman operator acts on the selected observables:</p>
+<div class="math notranslate nohighlight">
+\[
+K f_j \approx f_j \circ T \quad \text{for all } j = 1,\dots,m,
+\]</div>
+<p>and only within the subspace <span class="math notranslate nohighlight">\( \mathcal{F}_m \)</span>.</p>
+<p>A rigorous analysis of the convergence properties of EDMD is provided by Korda and Mezić in their work <span id="id2">[<a class="reference internal" href="references.html#id3" title="Milan Korda and Igor Mezić. On convergence of extended dynamic mode decomposition to the koopman operator. Journal of Nonlinear Science, 28:687–710, 2018.">KMezic18</a>]</span>.</p>
+<div class="important admonition">
+<p class="admonition-title">Convergence of EDMD</p>
+<p>Let <span class="math notranslate nohighlight">\( \mathcal{F}_m = \operatorname{span}\{f_1, \dots, f_m\} \subset L^2_\mu(\mathcal{X}) \)</span> be a sequence of finite-dimensional subspaces such that:</p>
+<div class="math notranslate nohighlight">
+\[
+\overline{\bigcup_{m} \mathcal{F}_m} = L^2_\mu(\mathcal{X}).
+\]</div>
+<p>Assume that the snapshot pairs <span class="math notranslate nohighlight">\( \{(x_t, x_t')\} \)</span> are sampled either independently or ergodically from the measure <span class="math notranslate nohighlight">\( \mu \)</span>, and that the observables <span class="math notranslate nohighlight">\( \{f_1, \dots, f_m\} \)</span> are linearly independent and belong to <span class="math notranslate nohighlight">\( L^2_\mu(\mathcal{X}) \)</span>. Then:</p>
+<ul class="simple">
+<li><p>As the number of snapshots <span class="math notranslate nohighlight">\( n \to \infty \)</span>, the empirical EDMD operator <span class="math notranslate nohighlight">\( K \)</span> converges to the projected Koopman operator <span class="math notranslate nohighlight">\( \mathcal{P}_m \mathcal{K}|_{\mathcal{F}_m} \)</span>.</p></li>
+<li><p>As the dimension <span class="math notranslate nohighlight">\( m \to \infty \)</span>, the projected operator <span class="math notranslate nohighlight">\( \mathcal{P}_m \mathcal{K}|_{\mathcal{F}_m} \)</span> converges to the true Koopman operator <span class="math notranslate nohighlight">\( \mathcal{K} \)</span> in the strong operator topology.</p></li>
+</ul>
+</div>
+<p>This two-step convergence implies that, with sufficiently rich observables and sample data, EDMD provides an increasingly accurate approximation of the Koopman operator. Notably, these results hold without requiring the finite-dimensional subspace <span class="math notranslate nohighlight">\( \mathcal{F}_m \)</span> to be invariant under the Koopman operator.</p>
+</section>
+<section id="numerical-implementation">
+<h3>Numerical Implementation<a class="headerlink" href="#numerical-implementation" title="Link to this heading">#</a></h3>
+<p>We now implement EDMD for the Van der Pol oscillator using the observables and snapshot data introduced earlier. We compare two numerical strategies for computing the Koopman approximation:</p>
+<ol class="arabic simple">
+<li><p>A <strong>naive pseudoinverse-based</strong> method,</p></li>
+<li><p>A <strong>more stable Gramian-based</strong> method derived from the normal equations.</p></li>
+</ol>
+<section id="naive-method-pseudoinverse">
+<h4>Naive Method (Pseudoinverse)<a class="headerlink" href="#naive-method-pseudoinverse" title="Link to this heading">#</a></h4>
+<p>The naive method solves the least-squares problem:</p>
+<div class="math notranslate nohighlight">
+\[
+\underset{K\in\mathbb{R}^{m\times m}}{\mathrm{minimize}}\; \|F' - K F\|_F^2.
+\]</div>
+<p>which yields the closed-form solution <span class="math notranslate nohighlight">\(K = F'^\top F^\dagger\)</span> using the Moore–Penrose pseudoinverse.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">pinv</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">edmd_naive</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">F_prime</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">F_prime</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">pinv</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Once we compute <span class="math notranslate nohighlight">\( K \)</span>, we simulate the system forward in the lifted feature space by applying the linear map repeatedly, starting from the lifted initial condition <span class="math notranslate nohighlight">\( f(x_0) \)</span>. The resulting sequence is then projected back to physical space by selecting the components of the observables corresponding to <span class="math notranslate nohighlight">\( u \)</span> and <span class="math notranslate nohighlight">\( v \)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">K</span> <span class="o">=</span> <span class="n">edmd_naive</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">F_prime</span><span class="p">)</span>
+
+<span class="n">n_pred</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">f0</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>                 <span class="c1"># lifted initial condition</span>
+<span class="n">f_preds</span> <span class="o">=</span> <span class="p">[</span><span class="n">f0</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_pred</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">f_preds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">K</span> <span class="o">@</span> <span class="n">f_preds</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">F_preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">f_preds</span><span class="p">)</span>  <span class="c1"># shape (n, m)</span>
+
+<span class="c1"># Project back to state space (u, v ≈ first two coordinates)</span>
+<span class="n">X_pred</span> <span class="o">=</span> <span class="n">F_preds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+
+<span class="c1"># Plot original vs. predicted</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;True trajectory&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_pred</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_pred</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;EDMD prediction&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;u&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;v&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Van der Pol oscillator: EDMD vs. true dynamics (Naive method)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/74971ae3ae382b105a4c583dc0316a7e3120aa5d3438e9d2188badeabc7051ed.png" src="_images/74971ae3ae382b105a4c583dc0316a7e3120aa5d3438e9d2188badeabc7051ed.png" />
+</div>
+</div>
+<p>Even though this approach is straightforward and efficient for small-scale problems, it may become unstable or inaccurate when the dictionary is large or poorly conditioned. In the next subsection, we address this using the Gramian formulation of EDMD.</p>
+</section>
+<section id="gramian-based-method-normal-equations">
+<h4>Gramian-Based Method (Normal Equations)<a class="headerlink" href="#gramian-based-method-normal-equations" title="Link to this heading">#</a></h4>
+<p>While the naive method provides a valid least-squares solution, it requires computing the pseudoinverse of <span class="math notranslate nohighlight">\( F \in \mathbb{R}^{n \times m} \)</span>, which can be numerically unstable or expensive when the dictionary of observables is large or poorly conditioned. A more robust alternative is to solve the same least-squares problem using the <strong>normal equations</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+\underset{K \in \mathbb{R}^{m \times m}}{\text{minimize}} \quad \|F' - K F\|_F^2.
+\]</div>
+<p>To derive the solution, we multiply both sides of the residual equation by <span class="math notranslate nohighlight">\( F^\top \)</span>, yielding the <strong>normal equations</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+F^\top F K^\top = F^\top F',
+\]</div>
+<p>which is equivalent to:</p>
+<div class="math notranslate nohighlight">
+\[
+G K^\top = A^\top,
+\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\( G = F^\top F \in \mathbb{R}^{m \times m} \)</span> is the <strong>Gram matrix</strong> of the observables,</p></li>
+<li><p><span class="math notranslate nohighlight">\( A = F^\top F' \in \mathbb{R}^{m \times m} \)</span> is the <strong>cross-covariance</strong> between current and next observables.</p></li>
+</ul>
+<p>Transposing both sides, we obtain the closed-form solution:</p>
+<div class="math notranslate nohighlight">
+\[
+K = A G^{-1}.
+\]</div>
+<p>To improve conditioning and ensure consistency with empirical expectations, we introduce a normalization factor <span class="math notranslate nohighlight">\( \frac{1}{n} \)</span>, resulting in:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">edmd_gramian</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">F_prime</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="n">F_prime</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">F</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="n">F</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">F</span>
+    <span class="k">return</span> <span class="n">A</span> <span class="o">@</span> <span class="n">pinv</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Remark: When is the Gramian approach preferred?</p>
+<p>The Gramian formulation is particularly well-suited when the number of observables <span class="math notranslate nohighlight">\( m \)</span> is much smaller than the number of snapshots <span class="math notranslate nohighlight">\( n \)</span>. In this regime, the Gram matrix <span class="math notranslate nohighlight">\( G = \frac{1}{n} F^\top F \in \mathbb{R}^{m \times m} \)</span> is typically well-conditioned and cheap to invert. Moreover, it avoids computing the pseudoinverse of the larger matrix <span class="math notranslate nohighlight">\( F \in \mathbb{R}^{n \times m} \)</span>, which can be unstable or computationally expensive when <span class="math notranslate nohighlight">\( n \gg m \)</span>.</p>
+<p>This is often the case in practice, where we have access to many time steps or trajectories (large <span class="math notranslate nohighlight">\( n \)</span>) but use a limited dictionary of observables (moderate <span class="math notranslate nohighlight">\( m \)</span>).</p>
+</div>
+<p>As before, we simulate the lifted dynamics under this linear approximation and project back to state space:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">K</span> <span class="o">=</span> <span class="n">edmd_gramian</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">F_prime</span><span class="p">)</span>
+
+<span class="n">f0</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">f_preds</span> <span class="o">=</span> <span class="p">[</span><span class="n">f0</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_pred</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">f_preds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">K</span> <span class="o">@</span> <span class="n">f_preds</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">F_preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">f_preds</span><span class="p">)</span>
+<span class="n">X_pred</span> <span class="o">=</span> <span class="n">F_preds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+
+<span class="c1"># Plot original vs. predicted</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;True trajectory&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_pred</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_pred</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;EDMD prediction (Gramian)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;u&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;v&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Van der Pol oscillator: EDMD vs. true dynamics (Gramian method)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/7b61e1b11c08f3327d75aa8fa1532454a1957c97a087dea0c89bacafca70c18e.png" src="_images/7b61e1b11c08f3327d75aa8fa1532454a1957c97a087dea0c89bacafca70c18e.png" />
+</div>
+</div>
+<p>We now compare the execution time of both methods:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">timeit</span>
+
+<span class="c1"># Time both versions</span>
+<span class="n">time_naive</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">edmd_naive</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">F_prime</span><span class="p">),</span> <span class="n">number</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">time_gramian</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">edmd_gramian</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">F_prime</span><span class="p">),</span> <span class="n">number</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Naive:   </span><span class="si">{</span><span class="n">time_naive</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Gramian: </span><span class="si">{</span><span class="n">time_gramian</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Naive:   0.0231 seconds
+Gramian: 0.0034 seconds
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="beyond-edmd">
+<h2>Beyond EDMD<a class="headerlink" href="#beyond-edmd" title="Link to this heading">#</a></h2>
+<p>Extended Dynamic Mode Decomposition (EDMD) provides a powerful framework for approximating the Koopman operator from data using a predefined set of observables. However, in many real-world applications, EDMD faces fundamental challenges — from the choice of observables to its scalability and robustness.</p>
+<div class="warning admonition">
+<p class="admonition-title">Limitations of EDMD</p>
+<p>While EDMD is conceptually simple and effective for small systems, it suffers from the following drawbacks:</p>
+<ul class="simple">
+<li><p>It requires a <strong>manually chosen dictionary</strong> of observables, which may not capture the system’s nonlinear structure.</p></li>
+<li><p>Polynomial dictionaries grow <strong>exponentially</strong> with the state dimension and polynomial degree.</p></li>
+<li><p>Without regularization, it can <strong>overfit</strong> when the number of observables is large relative to the number of data points.</p></li>
+<li><p>It assumes <strong>noise-free observations</strong>, making it brittle in experimental or stochastic settings.</p></li>
+<li><p>It approximates the Koopman operator only on the finite-dimensional subspace spanned by the chosen observables.</p></li>
+</ul>
+</div>
+<p>This section introduces several important extensions that address them.</p>
+<section id="sparse-edmd">
+<h3>Sparse EDMD<a class="headerlink" href="#sparse-edmd" title="Link to this heading">#</a></h3>
+<p>A natural improvement to EDMD is to promote <strong>sparsity</strong> in the learned Koopman matrix, selecting only the most relevant observables. This is especially helpful when using a large dictionary (e.g., high-degree polynomials or many basis functions), where overfitting and interpretability become concerns.</p>
+<p>Sparse variants introduce regularization into the Koopman regression problem, encouraging the elimination of unnecessary terms.</p>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>Sparse EDMD</em></p>
+<p>Sparse EDMD augments the Koopman regression with a regularization term:</p>
+<div class="math notranslate nohighlight">
+\[
+\underset{K \in \mathbb{R}^{m \times m}}{\text{minimize}} \quad \|F' - K F\|_F^2 + \lambda \mathcal{R}(K),
+\]</div>
+<p>where the choice of <span class="math notranslate nohighlight">\( \mathcal{R}(K) \)</span> defines the sparsity structure:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\( \|K\|_{1,1} = \sum_{i,j} |K_{i,j}| \)</span>: entrywise sparsity (using <strong>Lasso</strong>),</p></li>
+<li><p><span class="math notranslate nohighlight">\( \sum_i \|K_{i,:}\|_2 \)</span>: row-wise sparsity (using <strong>MultiTask Lasso</strong>).</p></li>
+</ul>
+</div>
+<p>These formulations allow us to reduce model complexity and discover the most influential observables, especially when <span class="math notranslate nohighlight">\( m \gg n \)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Lasso</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiTaskLasso</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">edmd_lasso</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">F_prime</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sparse EDMD with entrywise sparsity using Lasso (column-wise regression).</span>
+<span class="sd">    Solves: min_K ||F&#39; - F K^T||_F^2 + alpha * ||K||_1,1</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">m</span><span class="p">,</span> <span class="n">m</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">F_prime</span><span class="p">[:,</span> <span class="n">j</span><span class="p">])</span>
+        <span class="n">K</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span>  <span class="c1"># each row of K^T</span>
+    <span class="k">return</span> <span class="n">K</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">edmd_multitask</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">F_prime</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sparse EDMD with row-wise sparsity using MultiTaskLasso.</span>
+<span class="sd">    Solves: min_K ||F&#39; - F K^T||_F^2 + alpha * sum_i ||K[i,:]||_2</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">MultiTaskLasso</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">fit_intercept</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">F_prime</span><span class="p">)</span>  <span class="c1"># each output column jointly</span>
+    <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># scikit-learn returns shape (m_outputs, m_features)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="kernel-edmd">
+<h3>Kernel EDMD<a class="headerlink" href="#kernel-edmd" title="Link to this heading">#</a></h3>
+<p>To avoid explicitly constructing observables, <strong>kernel methods</strong> allow the Koopman operator to be approximated in <strong>implicit feature spaces</strong>. This technique is known as <strong>Kernel EDMD</strong> <span id="id3">[<a class="reference internal" href="references.html#id2" title="Stefan Klus, Ingmar Schuster, and Krikamol Muandet. Eigendecompositions of transfer operators in reproducing kernel hilbert spaces. Journal of Nonlinear Science, 30(1):283–315, August 2019. doi:10.1007/s00332-019-09574-z.">KSM19</a>]</span>.</p>
+<div class="note admonition">
+<p class="admonition-title">Kernel EDMD</p>
+<p>By defining a kernel <span class="math notranslate nohighlight">\( k(x, x') = \langle \phi(x), \phi(x') \rangle \)</span>, one can work with observables <span class="math notranslate nohighlight">\( \phi(x) \)</span> without ever computing them explicitly. The Koopman approximation is then constructed entirely from kernel evaluations between data points.</p>
+<ul class="simple">
+<li><p>Enables the use of infinite-dimensional feature spaces.</p></li>
+<li><p>Popular choices include polynomial and Gaussian RBF kernels.</p></li>
+<li><p>Scales better for high-dimensional state spaces.</p></li>
+</ul>
+</div>
+<p>See Klus et al. (2017) for a foundational treatment of Kernel EDMD.</p>
+</section>
+<section id="edmd-with-learned-observables">
+<h3>EDMD with Learned Observables<a class="headerlink" href="#edmd-with-learned-observables" title="Link to this heading">#</a></h3>
+<p>Rather than fixing a dictionary, one can <strong>learn the observables directly from data</strong> using neural networks. These methods train end-to-end to discover an embedding <span class="math notranslate nohighlight">\( f_\theta(x) \)</span> in which the dynamics evolve linearly:</p>
+<div class="note admonition">
+<p class="admonition-title">Learned Observables (Koopman Autoencoders)</p>
+<p>Let <span class="math notranslate nohighlight">\( f_\theta : \mathcal{X} \to \mathbb{R}^m \)</span> be a neural network representing the observables. One seeks a Koopman matrix <span class="math notranslate nohighlight">\( K \in \mathbb{R}^{m \times m} \)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[
+f_\theta(x_{t+1}) \approx K f_\theta(x_t)
+\]</div>
+<p>is satisfied over the data, while also possibly enforcing <span class="math notranslate nohighlight">\( x_t \approx g_\theta(f_\theta(x_t)) \)</span> via a decoder. This forms the basis of <strong>Koopman autoencoders</strong> and <strong>Deep EDMD</strong>.</p>
+</div>
+<p>This approach allows:</p>
+<ul class="simple">
+<li><p>Automatic discovery of observables,</p></li>
+<li><p>Better generalization to unseen data,</p></li>
+<li><p>Compatibility with nonlinear or partially observed systems.</p></li>
+</ul>
+<p>Key references include Lusch, Kutz &amp; Brunton (2018), and Takeishi et al. (2017).</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="koopman-operator.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Deterministic Dynamics and Koopman Operators</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="conformal-prediction.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Conformal Prediction</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conceptual-foundations">Conceptual Foundations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#from-data-to-koopman-approximation">From Data to Koopman Approximation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-case-van-der-pol-oscillator">Use-Case: Van der Pol Oscillator</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#model">Model</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#simulating-trajectories">Simulating Trajectories</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-space-visualization">Phase Space Visualization</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#observable-functions">Observable Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extended-dynamic-mode-decomposition-edmd">Extended Dynamic Mode Decomposition (EDMD)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#methodology">Methodology</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#numerical-implementation">Numerical Implementation</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#naive-method-pseudoinverse">Naive Method (Pseudoinverse)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#gramian-based-method-normal-equations">Gramian-Based Method (Normal Equations)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#beyond-edmd">Beyond EDMD</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-edmd">Sparse EDMD</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kernel-edmd">Kernel EDMD</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#edmd-with-learned-observables">EDMD with Learned Observables</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Jordan Patracone
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

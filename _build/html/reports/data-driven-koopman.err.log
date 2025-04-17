@@ -1,0 +1,242 @@
+Traceback (most recent call last):
+  File "/home/fj103585/anaconda3/lib/python3.9/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/home/fj103585/anaconda3/lib/python3.9/site-packages/nbclient/client.py", line 1204, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/home/fj103585/anaconda3/lib/python3.9/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/home/fj103585/anaconda3/lib/python3.9/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/home/fj103585/anaconda3/lib/python3.9/asyncio/base_events.py", line 647, in run_until_complete
+    return future.result()
+  File "/home/fj103585/anaconda3/lib/python3.9/site-packages/nbclient/client.py", line 663, in async_execute
+    await self.async_execute_cell(
+  File "/home/fj103585/anaconda3/lib/python3.9/site-packages/nbclient/client.py", line 965, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/fj103585/anaconda3/lib/python3.9/site-packages/nbclient/client.py", line 862, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+import numpy as np
+from sklearn.linear_model import Lasso
+
+def edmd_sparse(F, F_prime, alpha=1e-4):
+    """
+    Sparse EDMD using Lasso regression.
+
+    Parameters:
+    - F: ndarray of shape (n_samples, n_features)
+        Matrix of current observables.
+    - F_prime: ndarray of shape (n_samples, n_features)
+        Matrix of next-step observables.
+    - alpha: float
+        Regularization strength; must be a positive float.
+
+    Returns:
+    - K: ndarray of shape (n_features, n_features)
+        Approximated Koopman operator with sparsity.
+    """
+    n_features = F.shape[1]
+    K = np.zeros((n_features, n_features))
+    for i in range(n_features):
+        # Fit Lasso regression for each row of K
+        lasso = Lasso(alpha=alpha, fit_intercept=False, max_iter=10000)
+        lasso.fit(F[:, i], F_prime[:, i])
+        K[:, i] = lasso.coef_
+    return K
+
+
+# Define regularization parameter
+alpha = 1e-4  # Adjust based on desired sparsity
+
+# Compute sparse Koopman operator
+K_sparse = edmd_sparse(F, F_prime, alpha=alpha)
+
+# Predict future states in the lifted space
+n_pred = F.shape[0]
+f0 = F[0]  # Initial lifted state
+f_preds = [f0]
+for _ in range(n_pred - 1):
+    f_preds.append(K_sparse @ f_preds[-1])
+F_preds = np.stack(f_preds)
+
+# Project back to original state space (assuming first two observables correspond to original states)
+X_pred_sparse = F_preds[:, 1:3]
+
+# Plotting the results
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(10, 5))
+plt.plot(X[:, 0], X[:, 1], label="True trajectory")
+plt.plot(X_pred_sparse[:, 0], X_pred_sparse[:, 1], '--', label="Sparse EDMD prediction")
+plt.xlabel("u")
+plt.ylabel("v")
+plt.title("Van der Pol Oscillator: Sparse EDMD vs. True Dynamics")
+plt.legend()
+plt.grid(True)
+plt.show()
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mValueError[0m                                Traceback (most recent call last)
+Input [0;32mIn [10][0m, in [0;36m<cell line: 34>[0;34m()[0m
+[1;32m     31[0m alpha [38;5;241m=[39m [38;5;241m1e-4[39m  [38;5;66;03m# Adjust based on desired sparsity[39;00m
+[1;32m     33[0m [38;5;66;03m# Compute sparse Koopman operator[39;00m
+[0;32m---> 34[0m K_sparse [38;5;241m=[39m [43medmd_sparse[49m[43m([49m[43mF[49m[43m,[49m[43m [49m[43mF_prime[49m[43m,[49m[43m [49m[43malpha[49m[38;5;241;43m=[39;49m[43malpha[49m[43m)[49m
+[1;32m     36[0m [38;5;66;03m# Predict future states in the lifted space[39;00m
+[1;32m     37[0m n_pred [38;5;241m=[39m F[38;5;241m.[39mshape[[38;5;241m0[39m]
+
+Input [0;32mIn [10][0m, in [0;36medmd_sparse[0;34m(F, F_prime, alpha)[0m
+[1;32m     22[0m [38;5;28;01mfor[39;00m i [38;5;129;01min[39;00m [38;5;28mrange[39m(n_features):
+[1;32m     23[0m     [38;5;66;03m# Fit Lasso regression for each row of K[39;00m
+[1;32m     24[0m     lasso [38;5;241m=[39m Lasso(alpha[38;5;241m=[39malpha, fit_intercept[38;5;241m=[39m[38;5;28;01mFalse[39;00m, max_iter[38;5;241m=[39m[38;5;241m10000[39m)
+[0;32m---> 25[0m     [43mlasso[49m[38;5;241;43m.[39;49m[43mfit[49m[43m([49m[43mF[49m[43m[[49m[43m:[49m[43m,[49m[43m [49m[43mi[49m[43m][49m[43m,[49m[43m [49m[43mF_prime[49m[43m[[49m[43m:[49m[43m,[49m[43m [49m[43mi[49m[43m][49m[43m)[49m
+[1;32m     26[0m     K[:, i] [38;5;241m=[39m lasso[38;5;241m.[39mcoef_
+[1;32m     27[0m [38;5;28;01mreturn[39;00m K
+
+File [0;32m~/anaconda3/lib/python3.9/site-packages/sklearn/linear_model/_coordinate_descent.py:935[0m, in [0;36mElasticNet.fit[0;34m(self, X, y, sample_weight, check_input)[0m
+[1;32m    933[0m [38;5;28;01mif[39;00m check_input:
+[1;32m    934[0m     X_copied [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39mcopy_X [38;5;129;01mand[39;00m [38;5;28mself[39m[38;5;241m.[39mfit_intercept
+[0;32m--> 935[0m     X, y [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_validate_data[49m[43m([49m
+[1;32m    936[0m [43m        [49m[43mX[49m[43m,[49m
+[1;32m    937[0m [43m        [49m[43my[49m[43m,[49m
+[1;32m    938[0m [43m        [49m[43maccept_sparse[49m[38;5;241;43m=[39;49m[38;5;124;43m"[39;49m[38;5;124;43mcsc[39;49m[38;5;124;43m"[39;49m[43m,[49m
+[1;32m    939[0m [43m        [49m[43morder[49m[38;5;241;43m=[39;49m[38;5;124;43m"[39;49m[38;5;124;43mF[39;49m[38;5;124;43m"[39;49m[43m,[49m
+[1;32m    940[0m [43m        [49m[43mdtype[49m[38;5;241;43m=[39;49m[43m[[49m[43mnp[49m[38;5;241;43m.[39;49m[43mfloat64[49m[43m,[49m[43m [49m[43mnp[49m[38;5;241;43m.[39;49m[43mfloat32[49m[43m][49m[43m,[49m
+[1;32m    941[0m [43m        [49m[43mcopy[49m[38;5;241;43m=[39;49m[43mX_copied[49m[43m,[49m
+[1;32m    942[0m [43m        [49m[43mmulti_output[49m[38;5;241;43m=[39;49m[38;5;28;43;01mTrue[39;49;00m[43m,[49m
+[1;32m    943[0m [43m        [49m[43my_numeric[49m[38;5;241;43m=[39;49m[38;5;28;43;01mTrue[39;49;00m[43m,[49m
+[1;32m    944[0m [43m    [49m[43m)[49m
+[1;32m    945[0m     y [38;5;241m=[39m check_array(
+[1;32m    946[0m         y, order[38;5;241m=[39m[38;5;124m"[39m[38;5;124mF[39m[38;5;124m"[39m, copy[38;5;241m=[39m[38;5;28;01mFalse[39;00m, dtype[38;5;241m=[39mX[38;5;241m.[39mdtype[38;5;241m.[39mtype, ensure_2d[38;5;241m=[39m[38;5;28;01mFalse[39;00m
+[1;32m    947[0m     )
+[1;32m    949[0m n_samples, n_features [38;5;241m=[39m X[38;5;241m.[39mshape
+
+File [0;32m~/anaconda3/lib/python3.9/site-packages/sklearn/base.py:581[0m, in [0;36mBaseEstimator._validate_data[0;34m(self, X, y, reset, validate_separately, **check_params)[0m
+[1;32m    579[0m         y [38;5;241m=[39m check_array(y, [38;5;241m*[39m[38;5;241m*[39mcheck_y_params)
+[1;32m    580[0m     [38;5;28;01melse[39;00m:
+[0;32m--> 581[0m         X, y [38;5;241m=[39m [43mcheck_X_y[49m[43m([49m[43mX[49m[43m,[49m[43m [49m[43my[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mcheck_params[49m[43m)[49m
+[1;32m    582[0m     out [38;5;241m=[39m X, y
+[1;32m    584[0m [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m no_val_X [38;5;129;01mand[39;00m check_params[38;5;241m.[39mget([38;5;124m"[39m[38;5;124mensure_2d[39m[38;5;124m"[39m, [38;5;28;01mTrue[39;00m):
+
+File [0;32m~/anaconda3/lib/python3.9/site-packages/sklearn/utils/validation.py:964[0m, in [0;36mcheck_X_y[0;34m(X, y, accept_sparse, accept_large_sparse, dtype, order, copy, force_all_finite, ensure_2d, allow_nd, multi_output, ensure_min_samples, ensure_min_features, y_numeric, estimator)[0m
+[1;32m    961[0m [38;5;28;01mif[39;00m y [38;5;129;01mis[39;00m [38;5;28;01mNone[39;00m:
+[1;32m    962[0m     [38;5;28;01mraise[39;00m [38;5;167;01mValueError[39;00m([38;5;124m"[39m[38;5;124my cannot be None[39m[38;5;124m"[39m)
+[0;32m--> 964[0m X [38;5;241m=[39m [43mcheck_array[49m[43m([49m
+[1;32m    965[0m [43m    [49m[43mX[49m[43m,[49m
+[1;32m    966[0m [43m    [49m[43maccept_sparse[49m[38;5;241;43m=[39;49m[43maccept_sparse[49m[43m,[49m
+[1;32m    967[0m [43m    [49m[43maccept_large_sparse[49m[38;5;241;43m=[39;49m[43maccept_large_sparse[49m[43m,[49m
+[1;32m    968[0m [43m    [49m[43mdtype[49m[38;5;241;43m=[39;49m[43mdtype[49m[43m,[49m
+[1;32m    969[0m [43m    [49m[43morder[49m[38;5;241;43m=[39;49m[43morder[49m[43m,[49m
+[1;32m    970[0m [43m    [49m[43mcopy[49m[38;5;241;43m=[39;49m[43mcopy[49m[43m,[49m
+[1;32m    971[0m [43m    [49m[43mforce_all_finite[49m[38;5;241;43m=[39;49m[43mforce_all_finite[49m[43m,[49m
+[1;32m    972[0m [43m    [49m[43mensure_2d[49m[38;5;241;43m=[39;49m[43mensure_2d[49m[43m,[49m
+[1;32m    973[0m [43m    [49m[43mallow_nd[49m[38;5;241;43m=[39;49m[43mallow_nd[49m[43m,[49m
+[1;32m    974[0m [43m    [49m[43mensure_min_samples[49m[38;5;241;43m=[39;49m[43mensure_min_samples[49m[43m,[49m
+[1;32m    975[0m [43m    [49m[43mensure_min_features[49m[38;5;241;43m=[39;49m[43mensure_min_features[49m[43m,[49m
+[1;32m    976[0m [43m    [49m[43mestimator[49m[38;5;241;43m=[39;49m[43mestimator[49m[43m,[49m
+[1;32m    977[0m [43m[49m[43m)[49m
+[1;32m    979[0m y [38;5;241m=[39m _check_y(y, multi_output[38;5;241m=[39mmulti_output, y_numeric[38;5;241m=[39my_numeric)
+[1;32m    981[0m check_consistent_length(X, y)
+
+File [0;32m~/anaconda3/lib/python3.9/site-packages/sklearn/utils/validation.py:769[0m, in [0;36mcheck_array[0;34m(array, accept_sparse, accept_large_sparse, dtype, order, copy, force_all_finite, ensure_2d, allow_nd, ensure_min_samples, ensure_min_features, estimator)[0m
+[1;32m    767[0m     [38;5;66;03m# If input is 1D raise error[39;00m
+[1;32m    768[0m     [38;5;28;01mif[39;00m array[38;5;241m.[39mndim [38;5;241m==[39m [38;5;241m1[39m:
+[0;32m--> 769[0m         [38;5;28;01mraise[39;00m [38;5;167;01mValueError[39;00m(
+[1;32m    770[0m             [38;5;124m"[39m[38;5;124mExpected 2D array, got 1D array instead:[39m[38;5;130;01m\n[39;00m[38;5;124marray=[39m[38;5;132;01m{}[39;00m[38;5;124m.[39m[38;5;130;01m\n[39;00m[38;5;124m"[39m
+[1;32m    771[0m             [38;5;124m"[39m[38;5;124mReshape your data either using array.reshape(-1, 1) if [39m[38;5;124m"[39m
+[1;32m    772[0m             [38;5;124m"[39m[38;5;124myour data has a single feature or array.reshape(1, -1) [39m[38;5;124m"[39m
+[1;32m    773[0m             [38;5;124m"[39m[38;5;124mif it contains a single sample.[39m[38;5;124m"[39m[38;5;241m.[39mformat(array)
+[1;32m    774[0m         )
+[1;32m    776[0m [38;5;66;03m# make sure we actually converted to numeric:[39;00m
+[1;32m    777[0m [38;5;28;01mif[39;00m dtype_numeric [38;5;129;01mand[39;00m array[38;5;241m.[39mdtype[38;5;241m.[39mkind [38;5;129;01min[39;00m [38;5;124m"[39m[38;5;124mOUSV[39m[38;5;124m"[39m:
+
+[0;31mValueError[0m: Expected 2D array, got 1D array instead:
+array=[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.].
+Reshape your data either using array.reshape(-1, 1) if your data has a single feature or array.reshape(1, -1) if it contains a single sample.
+ValueError: Expected 2D array, got 1D array instead:
+array=[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.].
+Reshape your data either using array.reshape(-1, 1) if your data has a single feature or array.reshape(1, -1) if it contains a single sample.
+

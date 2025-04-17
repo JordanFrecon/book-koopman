@@ -1,0 +1,1121 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Stochastic Dynamics and Markov Operators &#8212; Research notes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'markov-chains';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Deterministic Dynamics and Koopman Operators" href="koopman-operator.html" />
+    <link rel="prev" title="Introduction" href="intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Research notes - Home"/>
+    <img src="_static/logo.png" class="logo__image only-dark pst-js-only" alt="Research notes - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Stochastic Dynamics and Markov Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="koopman-operator.html">Deterministic Dynamics and Koopman Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data-driven-koopman.html">Data-Driven Approximation of the Koopman Operator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conformal-prediction.html">Conformal Prediction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fmarkov-chains.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/markov-chains.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Stochastic Dynamics and Markov Operators</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-foundations">Mathematical Foundations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#measurable-and-measure-spaces">Measurable and Measure Spaces</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#probability-spaces-and-random-variables">Probability Spaces and Random Variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stochastic-processes">Stochastic Processes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#markov-chains">Markov Chains</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#markov-property">Markov Property</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#time-homogeneity">Time-Homogeneity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structure-of-the-transition-kernel">Structure of the Transition Kernel</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#markov-operators">Markov Operators</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evolution-of-functions">Evolution of Functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evolution-of-measures">Evolution of Measures</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#link-between-the-two-operators">Link Between the Two Operators</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#invariant-measure-and-stationarity">Invariant Measure and Stationarity</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#definition-and-motivation">Definition and Motivation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#existence">Existence</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#uniqueness">Uniqueness</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implications">Implications</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ergodicity-and-mixing">Ergodicity and Mixing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ergodicity">Ergodicity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mixing-and-decorrelation">Mixing and Decorrelation</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#strong-mixing-mixing">Strong Mixing (α-Mixing)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#weak-mixing">Weak Mixing</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#time-averages-and-ergodic-theorem">Time Averages and Ergodic Theorem</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion-and-outlook">Conclusion and Outlook</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="stochastic-dynamics-and-markov-operators">
+<h1>Stochastic Dynamics and Markov Operators<a class="headerlink" href="#stochastic-dynamics-and-markov-operators" title="Link to this heading">#</a></h1>
+<p>Stochastic processes describe systems that evolve over time under the influence of randomness. Among them, <strong>Markov chains</strong> play a central role: they model systems where the future state depends only on the present—not the full history. This memoryless property leads to rich mathematical structure and widespread applications in fields like physics, finance, biology, and machine learning.</p>
+<p>In this chapter, we develop a rigorous framework for studying <strong>stochastic dynamics</strong> using the tools of <strong>measure theory</strong> and <strong>operator theory</strong>. We start by formalizing probability through measurable spaces and random variables, then define stochastic processes and specialize to Markov chains. The key analytical tool we introduce is the <strong>Markov operator</strong>, which linearly evolves either functions (observables) or probability distributions.</p>
+<p>This operator-theoretic viewpoint allows us to study qualitative behaviors such as convergence, equilibrium, and mixing, using the powerful language of linear analysis. In doing so, we set the stage for the next chapter, where we will generalize these ideas to <strong>deterministic systems</strong> using the <strong>Koopman operator</strong>—a linear operator that captures the dynamics of nonlinear systems.</p>
+<section id="mathematical-foundations">
+<h2>Mathematical Foundations<a class="headerlink" href="#mathematical-foundations" title="Link to this heading">#</a></h2>
+<p>To describe systems that evolve with uncertainty—such as populations, queues, or weather—we need a precise mathematical language for probability. This is provided by <em>measure theory</em>, which offers the tools to rigorously define events, random variables, and integration. In this section, we introduce the essential objects of measure theory: measurable spaces, measures, and probability spaces. These form the foundation for defining random variables and, ultimately, stochastic processes.</p>
+<section id="measurable-and-measure-spaces">
+<h3>Measurable and Measure Spaces<a class="headerlink" href="#measurable-and-measure-spaces" title="Link to this heading">#</a></h3>
+<p>To rigorously define probability, we first need a mathematical structure that determines which subsets of a space can be assigned probabilities. This leads to the concept of a <em>measurable space</em>, which specifies the sets on which a measure—such as a probability measure—can be meaningfully defined. We then extend this structure to a <em>measure space</em>, where a measure quantifies these sets.</p>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>Measurable space</em></p>
+<p>A measurable space, also called <em>Borel space</em>, is a tuple <span class="math notranslate nohighlight">\((\mathcal{X}, \Sigma_\mathcal{X})\)</span>, where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mathcal{X}\)</span> is a set, called the <em>state space</em>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Sigma_\mathcal{X}\)</span> is a <span class="math notranslate nohighlight">\(\sigma\)</span>-algebra on <span class="math notranslate nohighlight">\(\mathcal{X}\)</span>, i.e., a collection of subsets of <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> satisfying:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\mathcal{X} \in \Sigma_\mathcal{X}\)</span>,</p></li>
+<li><p>(closure under complementation) If <span class="math notranslate nohighlight">\(A \in \Sigma_\mathcal{X}\)</span>, then <span class="math notranslate nohighlight">\(\mathcal{X} \setminus A \in \Sigma_\mathcal{X}\)</span>,</p></li>
+<li><p>(closure under countable unions) If <span class="math notranslate nohighlight">\(\{A_n\}_{n \in \mathbb{N}}\)</span> is a countable collection of sets in <span class="math notranslate nohighlight">\(\Sigma_\mathcal{X}\)</span>, then   <span class="math notranslate nohighlight">\(\bigcup_{n=1}^{\infty} A_n \in \Sigma_\mathcal{X}\)</span>.</p></li>
+</ol>
+</li>
+</ul>
+<p>The elements of <span class="math notranslate nohighlight">\(\Sigma_\mathcal{X}\)</span> are called <em>measurable sets</em>, and the pair <span class="math notranslate nohighlight">\((\mathcal{X}, \Sigma_\mathcal{X})\)</span> forms a <em>measurable space</em>.</p>
+</div>
+<p>A measure space extends a measurable space by introducing a measure that assigns sizes to measurable sets</p>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>Measure space</em></p>
+<p>A <em>measure space</em> is a tuple <span class="math notranslate nohighlight">\((\mathcal{X}, \Sigma_\mathcal{X}, \mu)\)</span>,
+where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\((\mathcal{X}, \Sigma_\mathcal{X})\)</span> is a <em>measurable space</em>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mu: \Sigma_\mathcal{X} \to [0, \infty]\)</span> is a <em>measure</em>, meaning it satisfies:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\mu(\emptyset) = 0\)</span>,</p></li>
+<li><p><em>(countable additivity)</em> If <span class="math notranslate nohighlight">\(\{A_n\}_{n \in \mathbb{N}}\)</span> is a countable collection of disjoint sets in <span class="math notranslate nohighlight">\(\Sigma_\mathcal{X}\)</span>, then<br />
+<span class="math notranslate nohighlight">\(
+\mu\left(\bigcup_{n=1}^{\infty} A_n\right) = \sum_{n=1}^{\infty} \mu(A_n).  
+\)</span></p></li>
+</ol>
+</li>
+</ul>
+</div>
+<p>A measurable space <span class="math notranslate nohighlight">\((\mathcal{X}, \Sigma_\mathcal{X})\)</span> provides the foundation for defining measurable sets but does not assign numerical values to them. In contrast, a measure space <span class="math notranslate nohighlight">\((\mathcal{X}, \Sigma_\mathcal{X}, \mu)\)</span> introduces a measure <span class="math notranslate nohighlight">\(\mu\)</span>, which assigns a non-negative size to each measurable set, enabling integration and probability calculations.</p>
+</section>
+<section id="probability-spaces-and-random-variables">
+<h3>Probability Spaces and Random Variables<a class="headerlink" href="#probability-spaces-and-random-variables" title="Link to this heading">#</a></h3>
+<p>A probability space is a special case of a measure space where the measure is normalized to 1, allowing us to model uncertainty and compute probabilities of events.</p>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>Probability space</em></p>
+<p>A <em>probability space</em> is a tuple <span class="math notranslate nohighlight">\((\Omega, \mathcal{F}, \mathbb{P})\)</span>, where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\((\Omega, \mathcal{F})\)</span> is a <em>measurable space</em> where <span class="math notranslate nohighlight">\(\Omega\)</span> is called the <em>sample space</em>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbb{P}: \mathcal{F} \to [0,1]\)</span> is a <em>probability measure</em>, meaning it satisfies:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\mathbb{P}(\emptyset) = 0\)</span> and <span class="math notranslate nohighlight">\(\mathbb{P}(\Omega) = 1\)</span>,</p></li>
+<li><p><em>(countable additivity)</em> If <span class="math notranslate nohighlight">\(\{A_n\}_{n \in \mathbb{N}}\)</span> is a countable collection of disjoint sets in <span class="math notranslate nohighlight">\(\mathcal{F}\)</span>, then <span class="math notranslate nohighlight">\(\mathbb{P}\left(\bigcup_{n=1}^{\infty} A_n\right) = \sum_{n=1}^{\infty} \mathbb{P}(A_n).\)</span></p></li>
+</ol>
+</li>
+</ul>
+</div>
+<p>A probability space provides the foundation for defining randomness mathematically, allowing us to assign probabilities to events.</p>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>Random variable</em></p>
+<p>Let <span class="math notranslate nohighlight">\((\Omega, \mathcal{F}, \mathbb{P})\)</span> be a probability space and <span class="math notranslate nohighlight">\((\mathcal{X}, \Sigma_\mathcal{X})\)</span> a measurable space. Then an <span class="math notranslate nohighlight">\((\mathcal{X}, \Sigma_\mathcal{X})\)</span>-valued <em>random variable</em> is a measurable function <span class="math notranslate nohighlight">\(X: \Omega \to \mathcal{X}\)</span>. In other words, <span class="math notranslate nohighlight">\(X\)</span> must satisfy the following measurability condition.</p>
+<ul class="simple">
+<li><p>For every measurable set <span class="math notranslate nohighlight">\(B \in \Sigma_\mathcal{X}\)</span>, the preimage   <span class="math notranslate nohighlight">\(X^{-1}(B) = \{ \omega \in \Omega : X(\omega) \in B \}\in\mathcal{F}\)</span>.</p></li>
+</ul>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Example: Rolling a fair die</p>
+<p>Let’s take the example of a die. We would like to properly define a random variable assigning 0 when the result of the die is odd and 1 if it is even.</p>
+<p><strong>Step 1: Define the probability space</strong></p>
+<p>A probability space consists of three components: a sample space, a sigma-algebra, and a probability measure.</p>
+<ul>
+<li><p>Sample space <span class="math notranslate nohighlight">\((\Omega)\)</span>: The set of all possible outcomes when rolling a fair six-sided die: <span class="math notranslate nohighlight">\(\Omega = \{1, 2, 3, 4, 5, 6\}.\)</span></p></li>
+<li><p>Sigma-algebra <span class="math notranslate nohighlight">\((\mathcal{F})\)</span>: The power set <span class="math notranslate nohighlight">\( \mathcal{F} = 2^\Omega \)</span>, i.e., all subsets of <span class="math notranslate nohighlight">\(\Omega\)</span>.</p></li>
+<li><p>Probability measure <span class="math notranslate nohighlight">\((P)\)</span>: Since the die is fair, the probability of each outcome is:</p>
+<div class="math notranslate nohighlight">
+\[
+  P(\{k\}) = \frac{1}{6}, \quad \text{for } k \in \{1,2,3,4,5,6\}.
+  \]</div>
+<p>The probability of any event (subset of <span class="math notranslate nohighlight">\(\Omega\)</span>) is the sum of the probabilities of its elements.</p>
+</li>
+</ul>
+<p><strong>Step 2: Define measure space</strong></p>
+<p>Now, we introduce the state space where the random variable takes values.</p>
+<ul>
+<li><p>State space <span class="math notranslate nohighlight">\((\mathcal{X})\)</span>: The possible values the random variable can take. Here, we set <span class="math notranslate nohighlight">\(\mathcal{X} = \{0,1\}\)</span>.</p></li>
+<li><p>Sigma-algebra on <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> <span class="math notranslate nohighlight">\((\Sigma_\mathcal{X})\)</span>: The smallest sigma-algebra making <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> measurable,</p>
+<div class="math notranslate nohighlight">
+\[
+  \Sigma_\mathcal{X} = \{\emptyset, \{0\}, \{1\}, \{0,1\} \}.
+  \]</div>
+</li>
+</ul>
+<p><strong>Step 3: Define the random variable and verify measurability</strong></p>
+<p>A random variable is a function that maps outcomes from <span class="math notranslate nohighlight">\(\Omega\)</span> to <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> while preserving measurability.</p>
+<ul>
+<li><p>Random variable <span class="math notranslate nohighlight">\((X: \Omega \to \mathcal{X})\)</span>: We define <span class="math notranslate nohighlight">\(X\)</span> as an indicator function:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+  X(\omega) =  
+  \begin{cases}  
+  1, &amp; \text{if } \omega \text{ is even (i.e., } \omega \in \{2,4,6\}) \\  
+  0, &amp; \text{otherwise.}  
+  \end{cases}  
+  \end{split}\]</div>
+</li>
+<li><p>Measurability: For <span class="math notranslate nohighlight">\(X\)</span> to be measurable, the preimage of every measurable set in <span class="math notranslate nohighlight">\(\Sigma_\mathcal{X}\)</span> must be in <span class="math notranslate nohighlight">\(\mathcal{F}\)</span>:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(X^{-1}(\{1\}) = \{2,4,6\} \in \mathcal{F}\)</span> (since it’s a subset of <span class="math notranslate nohighlight">\(\Omega\)</span>),</p></li>
+<li><p><span class="math notranslate nohighlight">\(X^{-1}(\{0\}) = \{1,3,5\} \in \mathcal{F}\)</span>.</p></li>
+</ul>
+</li>
+</ul>
+<p>Thus, <span class="math notranslate nohighlight">\(X\)</span> is a measurable function and hence a valid random variable.</p>
+</div>
+</section>
+<section id="stochastic-processes">
+<h3>Stochastic Processes<a class="headerlink" href="#stochastic-processes" title="Link to this heading">#</a></h3>
+<p>Now that we understand what a random variable is, we can extend this concept to define a stochastic process.</p>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>Stochastic process</em></p>
+<p>A <em>stochastic process</em> is a collection of random variables defined on a common probability space <span class="math notranslate nohighlight">\((\Omega, \mathcal{F}, P)\)</span> and indexed by a set <span class="math notranslate nohighlight">\(T\)</span> (interpreted as time). Formally, a stochastic process is a family of random variables</p>
+<div class="math notranslate nohighlight">
+\[
+X = \{ X_t \}_{t \in T}
+\]</div>
+<p>where each <span class="math notranslate nohighlight">\(X_t\)</span> is an <span class="math notranslate nohighlight">\((\mathcal{X}, \Sigma_\mathcal{X})\)</span>-valued random variable, meaning that <span class="math notranslate nohighlight">\(X_t: \Omega \to \mathcal{X}\)</span> is measurable with respect to <span class="math notranslate nohighlight">\(\mathcal{F}\)</span> and <span class="math notranslate nohighlight">\(\Sigma_\mathcal{X}\)</span>.</p>
+</div>
+<p>For any <span class="math notranslate nohighlight">\(t \in \mathbb{N}\)</span> and any measurable set <span class="math notranslate nohighlight">\(B \in \Sigma_{\mathcal{X}}\)</span>, we consider the probability that the process is in <span class="math notranslate nohighlight">\(B\)</span> at time <span class="math notranslate nohighlight">\(t+1\)</span>.</p>
+<p>Stochastic processes provide a flexible framework for modeling systems evolving under uncertainty. By indexing a family of random variables over time, they allow us to study how randomness propagates and how dependencies arise. In the following sections, we will focus on a particularly important class: Markov chains, where the future depends only on the present. This structure will enable us to introduce operator-theoretic tools that describe how probability and information evolve over time.</p>
+</section>
+</section>
+<section id="markov-chains">
+<h2>Markov Chains<a class="headerlink" href="#markov-chains" title="Link to this heading">#</a></h2>
+<p>Markov chains model stochastic systems where the future state depends only on the present state. In this section, we introduce the Markov property, define time-homogeneity, and interpret the transition kernel.</p>
+<section id="markov-property">
+<h3>Markov Property<a class="headerlink" href="#markov-property" title="Link to this heading">#</a></h3>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>Markov chain</em></p>
+<p>Let <span class="math notranslate nohighlight">\(\{X_t\}_{t \in \mathbb{N}}\)</span> be a stochastic process taking values in a measurable space <span class="math notranslate nohighlight">\((\mathcal{X}, \Sigma_{\mathcal{X}})\)</span> and defined on a probability space <span class="math notranslate nohighlight">\((\Omega, \mathcal{F}, \mathbb{P})\)</span>. We say that <span class="math notranslate nohighlight">\(X\)</span> is a <em>Markov chain</em> if, for all <span class="math notranslate nohighlight">\(t \in \mathbb{N}\)</span> and all measurable sets <span class="math notranslate nohighlight">\(B \in \Sigma_{\mathcal{X}}\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{P}(X_{t+1} \in B \mid X_{[t]}) = \mathbb{P}(X_{t+1} \in B \mid X_t),
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(X_{[t]} = \{ X_s : s \leq t \}\)</span> represents the history of the process up to time <span class="math notranslate nohighlight">\(t\)</span>.</p>
+<p>This condition, known as the <em>Markov property</em>, states that the future state <span class="math notranslate nohighlight">\(X_{t+1}\)</span> depends only on the present state <span class="math notranslate nohighlight">\(X_t\)</span> and not on past states. In other words, the process has no memory beyond its current state.</p>
+</div>
+<p>This Markov property expresses the memoryless nature of the process: the future depends only on the present, not the full past.</p>
+</section>
+<section id="time-homogeneity">
+<h3>Time-Homogeneity<a class="headerlink" href="#time-homogeneity" title="Link to this heading">#</a></h3>
+<p>A Markov chain <span class="math notranslate nohighlight">\(X := \{X_t : t \in \mathbb{N}\}\)</span> is said to be <em>time-homogeneous</em> if there exists a function</p>
+<div class="math notranslate nohighlight">
+\[
+p: \mathcal{X} \times \Sigma_{\mathcal{X}} \to [0,1],
+\]</div>
+<p>called the <em>transition kernel</em>, such that for every state <span class="math notranslate nohighlight">\(x \in \mathcal{X}\)</span>, every measurable set <span class="math notranslate nohighlight">\(B \in \Sigma_{\mathcal{X}}\)</span>, and every time step <span class="math notranslate nohighlight">\(t \in \mathbb{N}\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+P(X_{t+1} \in B \mid X_t = x) = p(x, B).
+\]</div>
+<p>This condition means that the probability of transitioning from state <span class="math notranslate nohighlight">\(x\)</span> to a set of states <span class="math notranslate nohighlight">\(B\)</span> depends only on <span class="math notranslate nohighlight">\(x\)</span> and not explicitly on time <span class="math notranslate nohighlight">\(t\)</span>. In other words, the transition probabilities remain the same at all times.</p>
+<div class="tip admonition">
+<p class="admonition-title">Remark: <em>Time-homogeneity</em></p>
+<p>Time-homogeneity simplifies the analysis of Markov chains, as the transition probabilities do not change over time. This allows for:</p>
+<ul class="simple">
+<li><p>The use of the <em>Chapman-Kolmogorov equations</em> to describe multi-step transitions,</p></li>
+<li><p>The definition of an associated transition operator or stochastic matrix in the discrete case,</p></li>
+<li><p>The study of long-term behavior such as stationary distributions and ergodicity.</p></li>
+</ul>
+<p>If the Markov chain is not time-homogeneous, the transition probabilities depend explicitly on <span class="math notranslate nohighlight">\(t\)</span>, so we would need to work with a time-dependent transition kernel <span class="math notranslate nohighlight">\(p_t(x, B)\)</span>. This significantly complicates analysis and requires more general techniques.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Example: <em>Simple Weather Model</em></p>
+<p>Suppose <span class="math notranslate nohighlight">\(\mathcal{X} = \{\text{Sunny}, \text{Rainy}\}\)</span>, and define a Markov chain where:</p>
+<ul class="simple">
+<li><p>If today is Sunny, tomorrow is Sunny with probability 0.9 and Rainy with probability 0.1.</p></li>
+<li><p>If today is Rainy, tomorrow is Sunny with probability 0.5 and Rainy with probability 0.5.</p></li>
+</ul>
+<p>Then the transition kernel <span class="math notranslate nohighlight">\(p(x, \cdot)\)</span> is defined by:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+p(\text{Sunny}, \cdot) = \begin{cases}
+0.9 &amp; \text{Sunny} \\
+0.1 &amp; \text{Rainy}
+\end{cases}, \quad
+p(\text{Rainy}, \cdot) = \begin{cases}
+0.5 &amp; \text{Sunny} \\
+0.5 &amp; \text{Rainy}
+\end{cases}
+\end{split}\]</div>
+<p>This defines a time-homogeneous Markov chain on a finite state space.</p>
+</div>
+<p>A special case of interest is when the Markov chain satisfies <strong>detailed balance</strong>, meaning that the process is reversible with respect to <span class="math notranslate nohighlight">\(\pi\)</span>:</p>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>Reversible Markov Chain</em></p>
+<p>A Markov chain is <strong>reversible</strong> with respect to a probability measure <span class="math notranslate nohighlight">\(\pi\)</span> if</p>
+<div class="math notranslate nohighlight">
+\[
+\pi(dx) p(x, dy) = \pi(dy) p(y, dx), \quad \forall x, y \in \mathcal{X}.
+\]</div>
+</div>
+</section>
+<section id="structure-of-the-transition-kernel">
+<h3>Structure of the Transition Kernel<a class="headerlink" href="#structure-of-the-transition-kernel" title="Link to this heading">#</a></h3>
+<p>The function <span class="math notranslate nohighlight">\(p(x, B)\)</span> represents the probability that the Markov chain moves to a state in <span class="math notranslate nohighlight">\(B\)</span> given that the current state is <span class="math notranslate nohighlight">\(x\)</span>. More formally, for each fixed <span class="math notranslate nohighlight">\(x \in \mathcal{X}\)</span>, the mapping</p>
+<div class="math notranslate nohighlight">
+\[
+B \mapsto p(x, B)
+\]</div>
+<p>defines a probability measure on the measurable space <span class="math notranslate nohighlight">\((\mathcal{X}, \Sigma_{\mathcal{X}})\)</span>. This ensures that:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(p(x, B) \geq 0\)</span> for all <span class="math notranslate nohighlight">\(x \in \mathcal{X}\)</span> and <span class="math notranslate nohighlight">\(B \in \Sigma_{\mathcal{X}}\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(p(x, \mathcal{X}) = 1\)</span> for all <span class="math notranslate nohighlight">\(x \in \mathcal{X}\)</span>, ensuring total probability is preserved,</p></li>
+<li><p>If <span class="math notranslate nohighlight">\(\{B_n\}_{n \in \mathbb{N}}\)</span> is a countable collection of disjoint sets in <span class="math notranslate nohighlight">\(\Sigma_{\mathcal{X}}\)</span>, then <span class="math notranslate nohighlight">\(p(x, \bigcup_{n=1}^{\infty} B_n) = \sum_{n=1}^{\infty} p(x, B_n)\)</span> (This follows from the definition of a probability measure).</p></li>
+</ol>
+<p>Beyond describing transitions between states, we often want to understand how entire distributions or observable functions evolve. To formalize this, we turn to Markov operators—linear operators acting on functions or measures—that encode the dynamics of a Markov chain in a functional framework.</p>
+</section>
+</section>
+<section id="markov-operators">
+<h2>Markov Operators<a class="headerlink" href="#markov-operators" title="Link to this heading">#</a></h2>
+<p>Markov processes are often studied through the evolution of sample paths or distributions. However, a powerful alternative approach is to consider how these processes act on functions and measures using linear operators. This operator-theoretic viewpoint not only simplifies the analysis of convergence and equilibrium but also connects to spectral theory, functional analysis, and numerical approximation. It forms the basis of modern perspectives on dynamical systems, such as the Koopman operator, which we will explore in the next section.</p>
+<p>In many applications, we are interested in how functions of the state evolve over time rather than just tracking the states themselves. The <strong>Markov transfer operator</strong> provides a way to describe this evolution. However, beyond functions, measures also evolve under the transition dynamics, leading to a dual operator that governs their behavior. Understanding both perspectives is key to analyzing Markov processes.</p>
+<section id="evolution-of-functions">
+<h3>Evolution of Functions<a class="headerlink" href="#evolution-of-functions" title="Link to this heading">#</a></h3>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>Markov Transfer Operator</em></p>
+<p>Let <span class="math notranslate nohighlight">\(\mathcal{F}\)</span> be a set of real-valued measurable functions on <span class="math notranslate nohighlight">\(\mathcal{X}\)</span>. The <em>Markov transfer operator</em> (or <em>Markov operator</em>) <span class="math notranslate nohighlight">\(\mathcal{A}_F : \mathcal{F} \to \mathcal{F}\)</span> is defined by</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{A}_F f (x) := \int_{\mathcal{X}} p(x, dy) f(y) = \mathbb{E} [ f(X_{t+1}) \mid X_t = x ], \quad f \in \mathcal{F}, \quad x \in \mathcal{X}.
+\]</div>
+</div>
+<p>This operator describes how a function <span class="math notranslate nohighlight">\( f \)</span> is transformed under the action of the Markov process. It effectively propagates functions forward in time according to the transition dynamics of the Markov chain.</p>
+<div class="tip admonition">
+<p class="admonition-title">Remark: <em>Choice of function space <span class="math notranslate nohighlight">\(\mathcal{F}\)</span></em></p>
+<p>A common choice of function space is <span class="math notranslate nohighlight">\(\mathcal{F} = L^\infty(\mathcal{X})\)</span>, the space of bounded functions on <span class="math notranslate nohighlight">\(\mathcal{X}\)</span>. However, in many cases, we are interested in function spaces related to the existence of an <em>invariant measure</em> <span class="math notranslate nohighlight">\(\pi\)</span> (see after).</p>
+<p>In this setting, we will that that it is natural to consider <span class="math notranslate nohighlight">\(\mathcal{F} = L^2_\pi(\mathcal{X})\)</span>, the space of square-integrable functions with respect to <span class="math notranslate nohighlight">\(\pi\)</span>.</p>
+</div>
+<p>In dynamical systems, <span class="math notranslate nohighlight">\(\mathcal{A}_F\)</span> is known as the (stochastic) <strong>Koopman operator</strong> on the space of observables <span class="math notranslate nohighlight">\(\mathcal{F}\)</span>.</p>
+</section>
+<section id="evolution-of-measures">
+<h3>Evolution of Measures<a class="headerlink" href="#evolution-of-measures" title="Link to this heading">#</a></h3>
+<p>Beyond acting on functions, the Markov transfer operator induces an evolution on measures. Given a measure <span class="math notranslate nohighlight">\(\mu\)</span> on <span class="math notranslate nohighlight">\(\mathcal{X}\)</span>, we define the <strong>dual operator</strong> <span class="math notranslate nohighlight">\(\mathcal{A}^*\)</span>, which acts on measures as follows:</p>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>Markov Dual (Pushforward) Operator</em></p>
+<p>Given a measure <span class="math notranslate nohighlight">\(\mu\)</span> on <span class="math notranslate nohighlight">\(\mathcal{X}\)</span>, the <strong>Markov pushforward operator</strong> <span class="math notranslate nohighlight">\(\mathcal{A}^*\)</span> is defined by</p>
+<div class="math notranslate nohighlight">
+\[
+(\mathcal{A}^* \mu)(B) := \int_{\mathcal{X}} p(x, B) \, d\mu(x), \quad B \in \Sigma_{\mathcal{X}}.
+\]</div>
+</div>
+<p>This operator describes how a measure <span class="math notranslate nohighlight">\(\mu\)</span> evolves under the dynamics of the Markov chain. In particular, if <span class="math notranslate nohighlight">\(\mu_t\)</span> represents the distribution of <span class="math notranslate nohighlight">\(X_t\)</span>, then</p>
+<div class="math notranslate nohighlight">
+\[
+\mu_{t+1} = \mathcal{A}^* \mu_t.
+\]</div>
+<p>Thus, the Markov transition kernel induces both an evolution on functions (through <span class="math notranslate nohighlight">\(\mathcal{A}_F\)</span>) and an evolution on measures (through <span class="math notranslate nohighlight">\(\mathcal{A}^*\)</span>).</p>
+</section>
+<section id="link-between-the-two-operators">
+<h3>Link Between the Two Operators<a class="headerlink" href="#link-between-the-two-operators" title="Link to this heading">#</a></h3>
+<p>The relationship between <span class="math notranslate nohighlight">\(\mathcal{A}_F\)</span> and <span class="math notranslate nohighlight">\(\mathcal{A}^*\)</span> is fundamental, as they offer dual perspectives on the evolution of a Markov process. Formally, they are dual with respect to integration against a measure <span class="math notranslate nohighlight">\(\mu\)</span>, meaning that for suitable functions <span class="math notranslate nohighlight">\(f\)</span> and measures <span class="math notranslate nohighlight">\(\mu\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\int_{\mathcal{X}} (\mathcal{A}_F f)(x) d\mu(x) = \int_{\mathcal{X}} f(x) d(\mathcal{A}^* \mu)(x).
+\]</div>
+<p>This duality is crucial: while <span class="math notranslate nohighlight">\(\mathcal{A}_F\)</span> describes the evolution of observables, <span class="math notranslate nohighlight">\(\mathcal{A}^*\)</span> governs the evolution of probability measures. A key consequence is that if <span class="math notranslate nohighlight">\(\mathcal{A}^*\)</span> admits a fixed point—an <strong>invariant measure</strong> <span class="math notranslate nohighlight">\(\pi\)</span> satisfying</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{A}^* \pi = \pi,
+\]</div>
+<p>then applying the duality relation shows that, under <span class="math notranslate nohighlight">\(\pi\)</span>, expectations remain unchanged under <span class="math notranslate nohighlight">\(\mathcal{A}_F\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\int_{\mathcal{X}} (\mathcal{A}_F f)(x) d\pi(x) = \int_{\mathcal{X}} f(x) d\pi(x).
+\]</div>
+<p>This means that statistical averages computed from <span class="math notranslate nohighlight">\(\pi\)</span> remain stable over time, motivating the study of invariant measures as they characterize the <strong>stationary statistical behavior</strong> of the system.</p>
+</section>
+</section>
+<section id="invariant-measure-and-stationarity">
+<h2>Invariant Measure and Stationarity<a class="headerlink" href="#invariant-measure-and-stationarity" title="Link to this heading">#</a></h2>
+<p>To understand the long-term behavior of a Markov chain, we must examine whether the system stabilizes over time. This leads to the notion of an <em>invariant measure</em>—a distribution that remains unchanged as the process evolves. Invariant measures capture the idea of statistical equilibrium and are key to understanding ergodicity, convergence, and time-averaged behavior in stochastic systems.</p>
+<section id="definition-and-motivation">
+<h3>Definition and Motivation<a class="headerlink" href="#definition-and-motivation" title="Link to this heading">#</a></h3>
+<p>A central question in Markov processes is whether a <strong>stationary distribution</strong> exists, meaning a probability measure <span class="math notranslate nohighlight">\(\pi\)</span> that remains unchanged under the action of <span class="math notranslate nohighlight">\(\mathcal{A}^*\)</span>. This corresponds to solving</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{A}^* \pi = \pi.
+\]</div>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>Invariant Measure</em></p>
+<p>A measure <span class="math notranslate nohighlight">\(\pi\)</span> on <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> is called <strong>invariant</strong> (or <strong>stationary</strong>) for the Markov transition kernel <span class="math notranslate nohighlight">\( p(x, dy) \)</span> if it satisfies</p>
+<div class="math notranslate nohighlight">
+\[
+\pi(B) = \int_{\mathcal{X}} \pi(dx) p(x, B), \quad \forall B \in \Sigma_{\mathcal{X}}.
+\]</div>
+</div>
+<p>So if <span class="math notranslate nohighlight">\(X_0\)</span> is distributed according to <span class="math notranslate nohighlight">\(\pi\)</span>, then <span class="math notranslate nohighlight">\(X_t\)</span> remains distributed according to <span class="math notranslate nohighlight">\(\pi\)</span> for all <span class="math notranslate nohighlight">\(t\)</span>.</p>
+<div class="tip admonition">
+<p class="admonition-title">Remark: <em>Reversibility implies invariance</em></p>
+<p>Suppose a probability measure <span class="math notranslate nohighlight">\(\pi\)</span> satisfies the detailed balance condition</p>
+<div class="math notranslate nohighlight">
+\[
+\pi(dx) p(x, dy) = \pi(dy) p(y, dx).
+\]</div>
+<p>Then <span class="math notranslate nohighlight">\(\pi\)</span> is automatically invariant, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[
+\pi(B) = \int_{\mathcal{X}} \pi(dx) p(x, B), \quad \forall B \in \Sigma_{\mathcal{X}}.
+\]</div>
+<p>This is why reversibility is usually studied with respect to an invariant measure. Reversibility not only implies invariance, but also leads to useful analytical properties, such as self-adjointness of the Markov operator in <span class="math notranslate nohighlight">\(L^2_\pi\)</span>.</p>
+</div>
+<p>The existence and uniqueness of an invariant measure are central to understanding the <strong>long-term behavior</strong> of the Markov process. If such a measure exists and is unique, it plays a fundamental role in describing <strong>statistical equilibrium</strong>.</p>
+<p>Why study invariant measures?</p>
+<ol class="arabic">
+<li><p><strong>Ergodicity</strong>: If an invariant measure <span class="math notranslate nohighlight">\(\pi\)</span> exists and is unique, it describes the long-term statistical behavior of the process. Specifically, for an ergodic Markov process, the time average of any integrable function <span class="math notranslate nohighlight">\(f\)</span> along a trajectory converges to its expectation under <span class="math notranslate nohighlight">\(\pi\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+   \frac{1}{T} \sum_{t=0}^{T-1} f(X_t) \xrightarrow[T \to \infty]{} \int_{\mathcal{X}} f(x) d\pi(x) \quad \text{almost surely}.
+   \]</div>
+<p>This ensures that the system does not depend on initial conditions in the long run and justifies using <span class="math notranslate nohighlight">\(\pi\)</span> as a statistical description of the system.</p>
+</li>
+<li><p><strong>Spectral Properties in the Ergodic Setting</strong>: The existence of an invariant measure is often related to the spectral properties of <span class="math notranslate nohighlight">\(\mathcal{A}_F\)</span>, particularly when analyzing convergence rates to equilibrium and mixing behavior. If the Markov process is ergodic, then <span class="math notranslate nohighlight">\(\mathcal{A}_F\)</span> has a leading eigenvalue <span class="math notranslate nohighlight">\(\lambda_1 = 1\)</span>, corresponding to the invariant measure <span class="math notranslate nohighlight">\(\pi\)</span> (i.e., <span class="math notranslate nohighlight">\(\mathcal{A}^* \pi = \pi\)</span>), and the rest of the spectrum lies strictly inside the unit disk:</p>
+<div class="math notranslate nohighlight">
+\[
+   1 = \lambda_1 &gt; |\lambda_2| \geq |\lambda_3| \geq \dots
+   \]</div>
+<p>The spectral gap, defined as</p>
+<div class="math notranslate nohighlight">
+\[
+   \gamma = 1 - |\lambda_2|,
+   \]</div>
+<p>controls the rate of convergence to the invariant measure. A large spectral gap implies fast mixing, while a small gap leads to slow convergence. If the process is non-ergodic, the spectrum may contain multiple eigenvalues of modulus 1, corresponding to multiple invariant measures or ergodic components.</p>
+</li>
+<li><p><strong>Physical Relevance</strong>: Many Markovian systems in physics, such as Langevin dynamics, Monte Carlo methods, and stochastic differential equations, admit an invariant measure that represents equilibrium states. Understanding the properties of <span class="math notranslate nohighlight">\(\pi\)</span> is crucial in applications such as molecular dynamics, statistical physics, and Bayesian inference, where algorithms like MCMC rely on ergodic Markov chains to sample from <span class="math notranslate nohighlight">\(\pi\)</span>.</p></li>
+</ol>
+</section>
+<section id="existence">
+<h3>Existence<a class="headerlink" href="#existence" title="Link to this heading">#</a></h3>
+<p>A fundamental question in Markov process theory is whether an invariant measure <span class="math notranslate nohighlight">\(\pi\)</span> exists. <span id="id1">[<a class="reference internal" href="references.html#id4" title="Giuseppe Da Prato and Jerzy Zabczyk. Ergodicity for infinite dimensional systems. Volume 229. Cambridge university press, 1996.">DPZ96</a>]</span> We first recall a general existence result:</p>
+<div class="important admonition">
+<p class="admonition-title"><strong>Theorem (Krylov-Bogoliubov)</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> be a Polish space (complete, separable, and metric), and let <span class="math notranslate nohighlight">\(\mathcal{A}^*\)</span> be the Markov dual operator. If there exists a sequence of probability measures <span class="math notranslate nohighlight">\(\mu_n\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[
+\mu_{n+1} = \mathcal{A}^* \mu_n
+\]</div>
+<p>and if the sequence <span class="math notranslate nohighlight">\( (\mu_n)\)</span> is <strong>tight</strong> (i.e., does not escape to infinity), then there exists a subsequence <span class="math notranslate nohighlight">\( (\mu_{n_k}) \)</span> that converges weakly to an invariant measure <span class="math notranslate nohighlight">\(\pi\)</span>.</p>
+</div>
+<p>This result guarantees the existence of an invariant measure under mild conditions but does not ensure uniqueness. We now derive a useful corollary when the state space is compact.</p>
+<div class="important admonition">
+<p class="admonition-title"><strong>Corollary</strong></p>
+<p>Let <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> be a <strong>compact</strong> metric space, and suppose the Markov dual operator <span class="math notranslate nohighlight">\(\mathcal{A}^*\)</span> is <strong>Feller</strong> (i.e., it maps continuous functions to continuous functions). Then an invariant probability measure <span class="math notranslate nohighlight">\(\pi\)</span> exists.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Proof</p>
+<p>Since <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> is compact, the space of probability measures on <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> (endowed with the weak topology) is also compact by <strong>Prohorov’s theorem</strong>. If we construct a sequence of measures <span class="math notranslate nohighlight">\(\mu_n\)</span> using the Krylov-Bogoliubov procedure, compactness guarantees that a subsequence has a weak limit. The Feller property ensures that the limiting measure <span class="math notranslate nohighlight">\(\pi\)</span> satisfies the invariance equation</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{A}^* \pi = \pi,
+\]</div>
+<p>completing the proof.</p>
+</div>
+<p>This corollary is frequently used in applications where compactness holds, such as in stochastic models with bounded state spaces.</p>
+</section>
+<section id="uniqueness">
+<h3>Uniqueness<a class="headerlink" href="#uniqueness" title="Link to this heading">#</a></h3>
+<p>When is the invariant measure unique? This depends on additional conditions:</p>
+<div class="important admonition">
+<p class="admonition-title">Theorem: <em>Uniqueness of the Invariant Measure</em></p>
+<p>If a Markov chain is <strong>irreducible</strong> and <strong>aperiodic</strong>, then the invariant measure <span class="math notranslate nohighlight">\(\pi\)</span> is unique, and for any initial distribution <span class="math notranslate nohighlight">\(\mu_0\)</span>, we have:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{A}^{*t} \mu_0 \to \pi \quad \text{as} \quad t \to \infty.
+\]</div>
+</div>
+<p>This follows from the <strong>Perron-Frobenius theorem</strong>, ensuring that <span class="math notranslate nohighlight">\(\mathcal{A}^*\)</span> has a unique leading eigenvalue <span class="math notranslate nohighlight">\(1\)</span>, with all other eigenvalues strictly less than <span class="math notranslate nohighlight">\(1\)</span> in absolute value.</p>
+<p>A stronger condition guaranteeing uniqueness is <strong>Doeblin’s condition</strong>:</p>
+<div class="important admonition">
+<p class="admonition-title">Proposition: <em>Doeblin’s Condition and Exponential Convergence</em></p>
+<p>If there exists <span class="math notranslate nohighlight">\(\delta &gt; 0\)</span> and a probability measure <span class="math notranslate nohighlight">\(\nu\)</span> such that for some <span class="math notranslate nohighlight">\(t_0 &gt; 0\)</span>, the transition kernel satisfies</p>
+<div class="math notranslate nohighlight">
+\[
+ p^{t_0}(x, dy) \geq \delta \nu(dy), \quad \forall x \in \mathcal{X},
+\]</div>
+<p>then the Markov chain converges to <span class="math notranslate nohighlight">\(\pi\)</span> exponentially fast:</p>
+<div class="math notranslate nohighlight">
+\[
+\|\mathcal{A}^{*t} \mu_0 - \pi\|_{\text{TV}} = O(e^{-\gamma t}),
+\]</div>
+<p>for some rate <span class="math notranslate nohighlight">\(\gamma &gt; 0\)</span>, where <span class="math notranslate nohighlight">\(\|\cdot\|_{\text{TV}}\)</span> is the total variation norm.</p>
+</div>
+</section>
+<section id="implications">
+<h3>Implications<a class="headerlink" href="#implications" title="Link to this heading">#</a></h3>
+<p>When an invariant measure <span class="math notranslate nohighlight">\(\pi\)</span> exists and is unique, it has profound implications on the choice of function space and on the properties of the Markov transfer operator. While a common choice is to work with the space of bounded functions <span class="math notranslate nohighlight">\(\mathcal{F} = L^\infty(\mathcal{X})\)</span>, the existence of <span class="math notranslate nohighlight">\(\pi\)</span> allows us to consider the Hilbert space <span class="math notranslate nohighlight">\(\mathcal{F} = L^2_\pi(\mathcal{X})\)</span>, which consists of functions that are square-integrable with respect to <span class="math notranslate nohighlight">\(\pi\)</span>. The corresponding Markov transfer operator, denoted <span class="math notranslate nohighlight">\(\mathcal{A}_\pi\)</span>, which acts on <span class="math notranslate nohighlight">\(L^2_\pi(\mathcal{X})\)</span> and is known to satisfy</p>
+<div class="math notranslate nohighlight">
+\[
+\|\mathcal{A}_\pi\| \leq 1.
+\]</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Proof</p>
+<p>Let <span class="math notranslate nohighlight">\(\mathcal{A}_\pi\)</span> be the Markov transfer operator defined on <span class="math notranslate nohighlight">\(L^2_\pi(\mathcal{X})\)</span> by</p>
+<div class="math notranslate nohighlight">
+\[
+(\mathcal{A}_\pi f)(x) = \int_\mathcal{X} p(x, dy) f(y).
+\]</div>
+<p>We aim to show that <span class="math notranslate nohighlight">\(\|\mathcal{A}_\pi\| \leq 1\)</span> where the norm is the operator norm induced by the <span class="math notranslate nohighlight">\(L^2_\pi\)</span> norm.
+Consider the <span class="math notranslate nohighlight">\(L^2_\pi\)</span>-inner product:</p>
+<div class="math notranslate nohighlight">
+\[
+\langle f, g \rangle_\pi = \int_\mathcal{X} f(x) g(x) \pi(dx).
+\]</div>
+<p>We compute the inner product of <span class="math notranslate nohighlight">\(\mathcal{A}_\pi f\)</span> and <span class="math notranslate nohighlight">\(\mathcal{A}_\pi g\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\langle \mathcal{A}_\pi f, \mathcal{A}_\pi g \rangle_\pi
+= \int_\mathcal{X} (\mathcal{A}_\pi f)(x) (\mathcal{A}_\pi g)(x) \pi(dx).
+\]</div>
+<p>Substituting the definition of <span class="math notranslate nohighlight">\(\mathcal{A}_\pi\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\int_\mathcal{X} \left( \int_\mathcal{X} p(x, dy) f(y) \right) \left( \int_\mathcal{X} p(x, dz) g(z) \right) \pi(dx).
+\]</div>
+<p>Using Fubini’s theorem and the definition of an invariant measure, we obtain</p>
+<div class="math notranslate nohighlight">
+\[
+\int_\mathcal{X} f(y) g(z) \left( \int_\mathcal{X} p(x, dy) p(x, dz) \pi(dx) \right).
+\]</div>
+<p>By Jensen’s inequality and the fact that <span class="math notranslate nohighlight">\(p(x, dy)\)</span> is a probability kernel, it follows that</p>
+<div class="math notranslate nohighlight">
+\[
+\|\mathcal{A}_\pi f\|_{L^2_\pi}^2 \leq \|f\|_{L^2_\pi}^2.
+\]</div>
+<p>From the above inequality, we conclude that <span class="math notranslate nohighlight">\(\|\mathcal{A}_\pi f\|_{L^2_\pi} \leq \|f\|_{L^2_\pi}\)</span>.
+Taking the supremum over all <span class="math notranslate nohighlight">\( f \)</span> with <span class="math notranslate nohighlight">\( \|f\|_{L^2_\pi} \leq 1 \)</span>, we obtain <span class="math notranslate nohighlight">\(
+\|\mathcal{A}_\pi\| \leq 1.\)</span> Thus, <span class="math notranslate nohighlight">\(\mathcal{A}_\pi\)</span> is a bounded linear operator with norm at most 1, completing the proof. \qed</p>
+</div>
+<p>which implies that it is a <em>bounded linear operator</em> on <span class="math notranslate nohighlight">\(L^2_\pi(\mathcal{X})\)</span>. This bound follows from the fact that the transition kernel <span class="math notranslate nohighlight">\(p(x, dy)\)</span> defines a Markov operator that preserves probability measures. More precisely, this inequality indicates that <span class="math notranslate nohighlight">\(\mathcal{A}_\pi\)</span> is a contraction (or non-expansive) operator in <span class="math notranslate nohighlight">\(L^2_\pi(\mathcal{X})\)</span>. Moreover, in the special case of reversible Markov chains, where the detailed balance condition holds, the operator <span class="math notranslate nohighlight">\(\mathcal{A}_\pi\)</span> becomes self-adjoint in <span class="math notranslate nohighlight">\(L^2_\pi(\mathcal{X})\)</span>. Self-adjointness is crucial for a clear spectral decomposition of <span class="math notranslate nohighlight">\(\mathcal{A}_\pi\)</span>, which in turn directly relates to the convergence rate to equilibrium. Specifically, the existence of a spectral gap (i.e., the difference between the leading eigenvalue <span class="math notranslate nohighlight">\(1\)</span> and the second-largest eigenvalue in absolute value) quantitatively determines the mixing rate of the Markov chain.</p>
+<p>Thus, the invariant measure not only characterizes the equilibrium state but also underpins the analytical properties of the Markov transfer operator, such as stability, convergence, and mixing behavior.</p>
+</section>
+</section>
+<section id="ergodicity-and-mixing">
+<h2>Ergodicity and Mixing<a class="headerlink" href="#ergodicity-and-mixing" title="Link to this heading">#</a></h2>
+<p>Once an invariant measure exists, a natural question arises: does the system converge to it? This section introduces ergodicity and mixing, which formalize the idea that a system forgets its initial condition and settles into stable, predictable behavior. <em>Ergodicity</em> describes convergence in distribution; <em>mixing</em> quantifies the rate at which statistical dependencies vanish.</p>
+<section id="ergodicity">
+<h3>Ergodicity<a class="headerlink" href="#ergodicity" title="Link to this heading">#</a></h3>
+<p>Ergodicity expresses the idea that a system will, over time, explore the entire space in a statistically uniform way. Whether we are modeling physical particles, economic states, or sequences of decisions, we often want to know: <em>does the system stabilize?</em> <em>Does it “average out” in a way that no part of the state space is neglected in the long run?</em></p>
+<p>Ergodicity can be understood from either the dual perspective, which describes how probability distributions evolve over time, or the primal perspective, which focuses on the evolution of functions (observables).</p>
+<hr class="docutils" />
+<p>From the <strong>dual operator’s</strong> view, ergodicity corresponds to <strong>convergence of the law of the process</strong> toward the invariant measure <span class="math notranslate nohighlight">\(\pi\)</span>, regardless of the initial distribution.</p>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>Ergodic Markov Chain (dual viewpoint)</em></p>
+<p>A time-homogeneous Markov chain <span class="math notranslate nohighlight">\(\{X_t\}_{t \in \mathbb{N}}\)</span> with transition kernel <span class="math notranslate nohighlight">\(p(x, \cdot)\)</span> and invariant measure <span class="math notranslate nohighlight">\(\pi\)</span> is said to be <strong>ergodic</strong> if, for any initial distribution <span class="math notranslate nohighlight">\(\mu_0\)</span>, we have</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{A}^{*t} \mu_0 \xrightarrow[t \to \infty]{} \pi,
+\]</div>
+<p>in the sense of weak convergence of measures. Equivalently, for all bounded measurable functions <span class="math notranslate nohighlight">\(f : \mathcal{X} \to \mathbb{R}\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbb{E}_{\mu_0}[f(X_t)] \xrightarrow[t \to \infty]{} \int_{\mathcal{X}} f(x) \, d\pi(x).
+\]</div>
+</div>
+<p>This means that the system forgets its initial condition in distribution, and time averages of observables converge to expectations under <span class="math notranslate nohighlight">\(\pi\)</span>.</p>
+<hr class="docutils" />
+<p>From the <strong>primal operator’s</strong> view, ergodicity means that the <strong>only fixed points</strong> of the Markov transfer operator <span class="math notranslate nohighlight">\(\mathcal{A}_F\)</span> in <span class="math notranslate nohighlight">\(L^2_\pi(\mathcal{X})\)</span> are constant functions. That is, if <span class="math notranslate nohighlight">\(\mathcal{A}_F f = f\)</span>, then <span class="math notranslate nohighlight">\(f(x) = \int_{\mathcal{X}} f(y) \, d\pi(y)\)</span> <span class="math notranslate nohighlight">\(\pi\)</span>-almost everywhere.</p>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>Ergodic Markov Chain (primal viewpoint)</em></p>
+<p>Let <span class="math notranslate nohighlight">\(\pi\)</span> be an invariant probability measure for a time-homogeneous Markov chain with transition kernel <span class="math notranslate nohighlight">\(p(x, \cdot)\)</span>. Consider the Markov transfer operator <span class="math notranslate nohighlight">\(\mathcal{A}_F\)</span> acting on <span class="math notranslate nohighlight">\(L^2_\pi(\mathcal{X})\)</span>, the space of square-integrable functions with respect to <span class="math notranslate nohighlight">\(\pi\)</span>.</p>
+<p>The chain is said to be <strong>ergodic</strong> if the only functions <span class="math notranslate nohighlight">\(f \in L^2_\pi(\mathcal{X})\)</span> satisfying</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{A}_F f = f
+\]</div>
+<p>are constant <span class="math notranslate nohighlight">\(\pi\)</span>-almost everywhere:</p>
+<div class="math notranslate nohighlight">
+\[
+f(x) = \int_{\mathcal{X}} f(y) \, d\pi(y).
+\]</div>
+</div>
+<p>This expresses that repeated application of the transition kernel flattens any observable <span class="math notranslate nohighlight">\(f\)</span> toward its mean under <span class="math notranslate nohighlight">\(\pi\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{A}_F^t f(x) \xrightarrow[t \to \infty]{} \int_{\mathcal{X}} f(y) \, d\pi(y).
+\]</div>
+<p>This formulation is particularly useful in spectral analysis, where ergodicity implies that the eigenspace associated to the eigenvalue <span class="math notranslate nohighlight">\(1\)</span> consists only of constant functions.</p>
+<blockquote>
+<div><p><strong>Note:</strong> Unlike the dual formulation, this definition requires the operator <span class="math notranslate nohighlight">\(\mathcal{A}_F\)</span> to be defined on a Hilbert space such as <span class="math notranslate nohighlight">\(L^2_\pi(\mathcal{X})\)</span>, which assumes the existence of an invariant measure and square-integrability of observables.</p>
+</div></blockquote>
+<p>In summary, the <strong>dual operator <span class="math notranslate nohighlight">\(\mathcal{A}^*\)</span></strong> pushes probability measures toward <span class="math notranslate nohighlight">\(\pi\)</span>, while the <strong>primal operator <span class="math notranslate nohighlight">\(\mathcal{A}_F\)</span></strong> pushes observables toward constants. Both viewpoints describe the same asymptotic behavior: the system stabilizes to a long-term statistical equilibrium that is independent of its initial condition.</p>
+</section>
+<section id="mixing-and-decorrelation">
+<h3>Mixing and Decorrelation<a class="headerlink" href="#mixing-and-decorrelation" title="Link to this heading">#</a></h3>
+<p>Ergodicity guarantees convergence of distributions. <strong>Mixing</strong> is a stronger property: it describes how the dependence between past and future vanishes over time.</p>
+<section id="strong-mixing-mixing">
+<h4>Strong Mixing (α-Mixing)<a class="headerlink" href="#strong-mixing-mixing" title="Link to this heading">#</a></h4>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>Strong Mixing</em></p>
+<p>Let <span class="math notranslate nohighlight">\(\sigma(X_t)\)</span> denote the sigma-algebra generated by <span class="math notranslate nohighlight">\(X_t\)</span>. A Markov chain is said to be <strong>strongly mixing</strong> if its <span class="math notranslate nohighlight">\(\alpha\)</span>-mixing coefficient</p>
+<div class="math notranslate nohighlight">
+\[
+\alpha(t) := \sup_{A \in \sigma(X_0), B \in \sigma(X_t)} \left| \mathbb{P}(A \cap B) - \mathbb{P}(A)\mathbb{P}(B) \right|
+\]</div>
+<p>satisfies <span class="math notranslate nohighlight">\(\alpha(t) \to 0\)</span> as <span class="math notranslate nohighlight">\(t \to \infty\)</span>.</p>
+</div>
+<p>This means that events at time <span class="math notranslate nohighlight">\(0\)</span> and time <span class="math notranslate nohighlight">\(t\)</span> become asymptotically independent. Strong mixing implies ergodicity, but the converse is not necessarily true.</p>
+</section>
+<section id="weak-mixing">
+<h4>Weak Mixing<a class="headerlink" href="#weak-mixing" title="Link to this heading">#</a></h4>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>Weak Mixing</em></p>
+<p>A Markov chain is said to be <strong>weakly mixing</strong> if for all bounded measurable functions <span class="math notranslate nohighlight">\(f, g : \mathcal{X} \to \mathbb{R}\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\text{Cov}(f(X_0), g(X_t)) \to 0 \quad \text{as } t \to \infty.
+\]</div>
+</div>
+<p>This implies that the correlation between observations decays, even if independence is not achieved.</p>
+</section>
+</section>
+<section id="time-averages-and-ergodic-theorem">
+<h3>Time Averages and Ergodic Theorem<a class="headerlink" href="#time-averages-and-ergodic-theorem" title="Link to this heading">#</a></h3>
+<p>Under ergodicity, long-term averages along trajectories converge to expectations under <span class="math notranslate nohighlight">\(\pi\)</span>. This is known as the <em>ergodic theorem</em>.</p>
+<div class="important admonition">
+<p class="admonition-title">Theorem: <em>Ergodic Theorem</em></p>
+<p>Let <span class="math notranslate nohighlight">\(\{X_t\}_{t \in \mathbb{N}}\)</span> be an ergodic Markov chain with invariant measure <span class="math notranslate nohighlight">\(\pi\)</span>. Then for any <span class="math notranslate nohighlight">\(f \in L^1_\pi(\mathcal{X})\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{1}{T} \sum_{t=0}^{T-1} f(X_t) \xrightarrow[T \to \infty]{\text{a.s.}} \int_{\mathcal{X}} f(x) d\pi(x).
+\]</div>
+</div>
+<p>This result justifies the use of <span class="math notranslate nohighlight">\(\pi\)</span> as the <em>empirical average</em> distribution seen over time.</p>
+</section>
+</section>
+<section id="conclusion-and-outlook">
+<h2>Conclusion and Outlook<a class="headerlink" href="#conclusion-and-outlook" title="Link to this heading">#</a></h2>
+<p>In this course, we developed a rigorous framework for analyzing Markov chains using the tools of measure theory and operator theory. We explored how the Markov transfer operator governs the evolution of functions (observables), while its dual describes the evolution of distributions. These perspectives are linked through a fundamental duality that illuminates the long-term behavior of stochastic processes.</p>
+<p>We saw how invariant measures characterize statistical equilibrium, how ergodicity captures asymptotic independence from initial conditions, and how spectral properties relate to convergence and mixing.</p>
+<p>These theoretical tools are not just abstract constructions—they play a crucial role in practical areas such as statistical physics, machine learning (e.g., MCMC), and dynamical systems. Whether one is interested in the long-term behavior of a physical system or the convergence of a stochastic algorithm, the operator-theoretic view of Markov chains offers both clarity and depth.</p>
+<p>In the next chapter, we generalize this idea. The <strong>Koopman operator</strong> provides an operator-theoretic description of deterministic systems, where functions evolve by composition with the system’s dynamics. This viewpoint allows us to analyze nonlinear systems using linear tools, and reveals deep connections between stochastic processes, dynamical systems, and data-driven modeling.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Introduction</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="koopman-operator.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Deterministic Dynamics and Koopman Operators</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-foundations">Mathematical Foundations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#measurable-and-measure-spaces">Measurable and Measure Spaces</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#probability-spaces-and-random-variables">Probability Spaces and Random Variables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stochastic-processes">Stochastic Processes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#markov-chains">Markov Chains</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#markov-property">Markov Property</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#time-homogeneity">Time-Homogeneity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#structure-of-the-transition-kernel">Structure of the Transition Kernel</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#markov-operators">Markov Operators</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evolution-of-functions">Evolution of Functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evolution-of-measures">Evolution of Measures</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#link-between-the-two-operators">Link Between the Two Operators</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#invariant-measure-and-stationarity">Invariant Measure and Stationarity</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#definition-and-motivation">Definition and Motivation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#existence">Existence</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#uniqueness">Uniqueness</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implications">Implications</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ergodicity-and-mixing">Ergodicity and Mixing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ergodicity">Ergodicity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mixing-and-decorrelation">Mixing and Decorrelation</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#strong-mixing-mixing">Strong Mixing (α-Mixing)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#weak-mixing">Weak Mixing</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#time-averages-and-ergodic-theorem">Time Averages and Ergodic Theorem</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion-and-outlook">Conclusion and Outlook</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Jordan Patracone
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1506 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Deterministic Dynamics and Koopman Operators &#8212; Research notes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'koopman-operator';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Data-Driven Approximation of the Koopman Operator" href="data-driven-koopman.html" />
+    <link rel="prev" title="Stochastic Dynamics and Markov Operators" href="markov-chains.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Research notes - Home"/>
+    <img src="_static/logo.png" class="logo__image only-dark pst-js-only" alt="Research notes - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="markov-chains.html">Stochastic Dynamics and Markov Operators</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Deterministic Dynamics and Koopman Operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data-driven-koopman.html">Data-Driven Approximation of the Koopman Operator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conformal-prediction.html">Conformal Prediction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fkoopman-operator.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/koopman-operator.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Deterministic Dynamics and Koopman Operators</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-markov-operators-to-koopman-operators">From Markov Operators to Koopman Operators</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deterministic-dynamical-systems">Deterministic Dynamical Systems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#primal-perspective">Primal Perspective</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dual-perspective">Dual Perspective</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#invariant-measures-and-operator-duality">Invariant Measures and Operator Duality</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functional-setting-and-invariant-measures">Functional Setting and Invariant Measures</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-function-spaces-for-observables">Common Function Spaces for Observables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#invariant-measures-and-motivation">Invariant Measures and Motivation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#boundedness-of-the-koopman-operator">Boundedness of the Koopman Operator</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-boundedness-matters">Why Boundedness Matters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boundedness-on-l-p-mu-mathcal-x">Boundedness on <span class="math notranslate nohighlight">\( L^p_\mu(\mathcal{X}) \)</span></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#when-is-the-operator-bounded">When is the operator bounded?</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#what-if-mu-is-not-invariant">What if <span class="math notranslate nohighlight">\( \mu \)</span> is not invariant?</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boundedness-on-l-infty-mathcal-x">Boundedness on <span class="math notranslate nohighlight">\( L^\infty(\mathcal{X}) \)</span></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why this matters</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boundedness-on-c-0-mathcal-x">Boundedness on <span class="math notranslate nohighlight">\( C^0(\mathcal{X}) \)</span></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#comments">Comments</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spectral-properties-of-koopman-operators">Spectral Properties of Koopman Operators</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#functional-spaces-and-their-spectral-implications">Functional Spaces and Their Spectral Implications</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#l-2-mu-mathcal-x-the-ideal-setting"><span class="math notranslate nohighlight">\(L^2_\mu(\mathcal{X})\)</span>: The ideal setting</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#l-infty-mathcal-x-bounded-but-no-inner-product"><span class="math notranslate nohighlight">\(L^\infty(\mathcal{X})\)</span>: Bounded, but no inner product</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#c-0-mathcal-x-continuous-dynamics"><span class="math notranslate nohighlight">\(C^0(\mathcal{X})\)</span>: Continuous dynamics</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sobolev-hardy-and-analytic-spaces">Sobolev, Hardy, and analytic spaces</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-spectral-behavior-by-function-space">Summary: Spectral Behavior by Function Space</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#koopman-eigenfunctions-and-the-point-spectrum">Koopman Eigenfunctions and the Point Spectrum</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#koopman-eigenvalue-equation">Koopman Eigenvalue Equation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#why-eigenfunctions-matter">Why Eigenfunctions Matter</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#beyond-eigenvalues-the-full-koopman-spectrum">Beyond Eigenvalues: The Full Koopman Spectrum</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#canonical-examples">Canonical Examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-rotation-on-the-circle">Example 1: Rotation on the Circle</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#invariant-measure">Invariant Measure</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#koopman-operator-and-eigenfunctions">Koopman Operator and Eigenfunctions</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-doubling-map-on-0-1">Example 2: Doubling Map on <span class="math notranslate nohighlight">\([0,1]\)</span></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Invariant Measure</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#koopman-operator-and-spectrum">Koopman Operator and Spectrum</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3-squaring-map-on-0-1">Example 3: Squaring Map on <span class="math notranslate nohighlight">\([0,1]\)</span></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Invariant Measure</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Koopman Operator and Spectrum</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="deterministic-dynamics-and-koopman-operators">
+<h1>Deterministic Dynamics and Koopman Operators<a class="headerlink" href="#deterministic-dynamics-and-koopman-operators" title="Link to this heading">#</a></h1>
+<p>In the previous chapter, we developed a functional-analytic perspective on stochastic processes using <strong>Markov operators</strong>, which evolve probability distributions and observables under random dynamics. We saw how this linear operator framework allowed us to study convergence, invariant measures, and long-term statistical behavior in a unified way.</p>
+<p>In this chapter, we turn to <strong>deterministic dynamical systems</strong>, where the evolution of the system is governed by a fixed rule without randomness. Despite this fundamental shift, the operator-theoretic viewpoint remains powerful—and in fact, becomes even more striking. The central object of study is the <strong>Koopman operator</strong>: a linear operator that describes the evolution of observables by composition with the system’s dynamics.</p>
+<p>Unlike the Markov operator, which averages over future possibilities, the Koopman operator captures the precise evolution of deterministic systems. This allows us to analyze nonlinear dynamics using linear tools, such as spectral decomposition, eigenfunctions, and mode analysis. Through this lens, we will explore the long-term behavior, invariant sets, and structure of complex dynamical systems.</p>
+<p>This chapter builds a bridge between probability, functional analysis, and dynamical systems—laying the foundation for data-driven methods such as dynamic mode decomposition and Koopman learning, discussed in the next chapter.</p>
+<section id="from-markov-operators-to-koopman-operators">
+<h2>From Markov Operators to Koopman Operators<a class="headerlink" href="#from-markov-operators-to-koopman-operators" title="Link to this heading">#</a></h2>
+<p>We now shift from stochastic to deterministic dynamics. In a deterministic system, the state evolves according to a rule without randomness. That is, the next state is entirely determined by the current one.</p>
+<section id="deterministic-dynamical-systems">
+<h3>Deterministic Dynamical Systems<a class="headerlink" href="#deterministic-dynamical-systems" title="Link to this heading">#</a></h3>
+<p>Let <span class="math notranslate nohighlight">\((\mathcal{X}, \Sigma_\mathcal{X})\)</span> be a measurable space, and let <span class="math notranslate nohighlight">\(T : \mathcal{X} \to \mathcal{X}\)</span> be a measurable, deterministic map. A <strong>discrete-time deterministic dynamical system</strong> describes the evolution of a system through a sequence of states determined by a rule. Such a system may take one of two forms:</p>
+<ul>
+<li><p><strong>Non-autonomous</strong>, where the update rule varies with time:</p>
+<div class="math notranslate nohighlight">
+\[
+  x_{t+1} = T_t(x_t),
+  \]</div>
+<p>with each <span class="math notranslate nohighlight">\(T_t : \mathcal{X} \to \mathcal{X}\)</span> depending explicitly on the time index <span class="math notranslate nohighlight">\(t\)</span>.</p>
+</li>
+<li><p><strong>Autonomous</strong>, where the same rule applies at every time step:</p>
+<div class="math notranslate nohighlight">
+\[
+  x_{t+1} = T(x_t),
+  \]</div>
+<p>for a fixed, time-invariant map <span class="math notranslate nohighlight">\(T\)</span>.</p>
+</li>
+</ul>
+<p>In this chapter, we focus exclusively on <strong>autonomous deterministic systems</strong>, which form the classical foundation of Koopman operator theory. Given an initial state <span class="math notranslate nohighlight">\(x_0 \in \mathcal{X}\)</span>, the system generates a deterministic trajectory <span class="math notranslate nohighlight">\(\{x_t\}_{t \geq 0}\)</span> by iterating the map:</p>
+<div class="math notranslate nohighlight">
+\[
+x_t = T^t(x_0),
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(T^t\)</span> denotes <span class="math notranslate nohighlight">\(t\)</span>-fold composition of <span class="math notranslate nohighlight">\(T\)</span>. There is no randomness involved: the system follows a unique, fully determined path from any starting point.</p>
+</section>
+<section id="primal-perspective">
+<h3>Primal Perspective<a class="headerlink" href="#primal-perspective" title="Link to this heading">#</a></h3>
+<p>In the Markovian setting, we introduced the <strong>Markov transfer operator</strong> <span class="math notranslate nohighlight">\(\mathcal{A}_F\)</span>, which evolves observables through expectations under a transition kernel:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{A}_F f(x) = \int_{\mathcal{X}} f(y)\, p(x, dy).
+\]</div>
+<p>For deterministic systems, this simplifies: there is no averaging over possible outcomes. The evolution of an observable is obtained by composing it with the deterministic map <span class="math notranslate nohighlight">\(T\)</span>:</p>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>Koopman Operator</em></p>
+<p>Let <span class="math notranslate nohighlight">\(T : \mathcal{X} \to \mathcal{X}\)</span> be an autonomous deterministic map. The <strong>Koopman operator</strong> <span class="math notranslate nohighlight">\(\mathcal{K}\)</span> acts on observables <span class="math notranslate nohighlight">\(f : \mathcal{X} \to \mathbb{R}\)</span> by</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{K} f(x) = f(T(x)).
+\]</div>
+</div>
+<p>Despite the fact that <span class="math notranslate nohighlight">\(T\)</span> may be nonlinear, the Koopman operator <span class="math notranslate nohighlight">\(\mathcal{K}\)</span> is <strong>linear</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{K}(a f + b g) = a \mathcal{K} f + b \mathcal{K} g.
+\]</div>
+<p>This linearity is powerful: it allows us to study nonlinear dynamical systems using the tools of linear operator theory, including spectral analysis, eigenfunctions, and mode decompositions.</p>
+</section>
+<section id="dual-perspective">
+<h3>Dual Perspective<a class="headerlink" href="#dual-perspective" title="Link to this heading">#</a></h3>
+<p>In the stochastic setting, we studied two complementary operators:</p>
+<ul class="simple">
+<li><p>The <strong>Markov transfer operator</strong> <span class="math notranslate nohighlight">\(\mathcal{A}_F\)</span>, which acts on observables,</p></li>
+<li><p>Its <strong>dual</strong> <span class="math notranslate nohighlight">\(\mathcal{A}^*\)</span>, which acts on probability measures.</p></li>
+</ul>
+<p>These were linked by the duality relation:</p>
+<div class="math notranslate nohighlight">
+\[
+\int_{\mathcal{X}} (\mathcal{A}_F f)(x)\, d\mu(x) = \int_{\mathcal{X}} f(x)\, d(\mathcal{A}^* \mu)(x).
+\]</div>
+<p>In the deterministic setting, the same dual structure arises. The Koopman operator <span class="math notranslate nohighlight">\(\mathcal{K}\)</span> acts on observables by composition with the map <span class="math notranslate nohighlight">\(T\)</span>, while its dual is the <strong>pushforward</strong> operator:</p>
+<div class="math notranslate nohighlight">
+\[
+T_* \mu(B) := \mu(T^{-1}(B)), \quad \forall B \in \Sigma_{\mathcal{X}}.
+\]</div>
+<p>This operator evolves probability measures forward in time according to the dynamics. It is also known as the <strong>Perron–Frobenius operator</strong>, often denoted <span class="math notranslate nohighlight">\(\mathcal{P}\)</span>.</p>
+<p>The Koopman and Perron–Frobenius operators satisfy the duality:</p>
+<div class="math notranslate nohighlight">
+\[
+\int_{\mathcal{X}} (\mathcal{K} f)(x)\, d\mu(x) = \int_{\mathcal{X}} f(x)\, d(\mathcal{P} \mu)(x).
+\]</div>
+<p>So just as <span class="math notranslate nohighlight">\((\mathcal{A}_F, \mathcal{A}^*)\)</span> describe the evolution of functions and distributions in the Markovian setting, the pair <span class="math notranslate nohighlight">\((\mathcal{K}, \mathcal{P})\)</span> plays the same role in deterministic dynamics.</p>
+<p>This structural similarity highlights one of the key themes of this course: <strong>both stochastic and deterministic systems admit linear operator frameworks that reveal their long-term behavior</strong>—through fixed points, spectral properties, and invariant subspaces.</p>
+</section>
+<section id="invariant-measures-and-operator-duality">
+<h3>Invariant Measures and Operator Duality<a class="headerlink" href="#invariant-measures-and-operator-duality" title="Link to this heading">#</a></h3>
+<p>As in the Markov setting, <strong>invariant measures</strong> play a fundamental role in the analysis of deterministic systems through the Koopman and Perron–Frobenius operators. They serve as a bridge between the primal and dual perspectives, enabling both the definition of the Koopman operator on <span class="math notranslate nohighlight">\(L^2\)</span> spaces and the interpretation of long-term statistical behavior.</p>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>Invariant Measure for a Deterministic Map</em></p>
+<p>Let <span class="math notranslate nohighlight">\(T : \mathcal{X} \to \mathcal{X}\)</span> be a measurable map. A probability measure <span class="math notranslate nohighlight">\(\mu\)</span> on <span class="math notranslate nohighlight">\((\mathcal{X}, \Sigma_\mathcal{X})\)</span> is <strong>invariant</strong> under <span class="math notranslate nohighlight">\(T\)</span> if</p>
+<div class="math notranslate nohighlight">
+\[
+\mu(T^{-1}(B)) = \mu(B), \quad \forall B \in \Sigma_{\mathcal{X}}.
+\]</div>
+<p>Equivalently, the pushforward measure satisfies <span class="math notranslate nohighlight">\(T_* \mu = \mu\)</span>.</p>
+</div>
+<p>This means that if <span class="math notranslate nohighlight">\(x_0 \sim \mu\)</span>, then <span class="math notranslate nohighlight">\(x_t \sim \mu\)</span> for all <span class="math notranslate nohighlight">\(t \in \mathbb{N}\)</span>. Invariant measures ensure that distributions remain stable under the dynamics and provide a natural reference measure for studying long-term averages and ergodic properties.</p>
+<p>In the deterministic setting, invariant measures allow us to:</p>
+<ul class="simple">
+<li><p>Define the Koopman operator on <span class="math notranslate nohighlight">\(L^2_\mu(\mathcal{X})\)</span> and interpret it as an isometry,</p></li>
+<li><p>Give statistical meaning to time-averaged observables,</p></li>
+<li><p>Formulate duality between <span class="math notranslate nohighlight">\(\mathcal{K}\)</span> and the Perron–Frobenius operator <span class="math notranslate nohighlight">\(\mathcal{P} = T_*\)</span>.</p></li>
+</ul>
+<blockquote>
+<div><p>These roles mirror those of invariant measures in the Markovian setting, where the condition <span class="math notranslate nohighlight">\(\mathcal{A}^* \pi = \pi\)</span> played the same stabilizing role.</p>
+</div></blockquote>
+<p>At this stage, we will <strong>not yet assume</strong> the existence of an invariant measure, nor prove when one exists. That discussion will come later, once we introduce the functional spaces where <span class="math notranslate nohighlight">\(\mathcal{K}\)</span> acts and explore ergodic and asymptotic properties of deterministic systems.</p>
+</section>
+<section id="summary">
+<h3>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h3>
+<p>To conclude this section, we summarize the key parallels between stochastic and deterministic dynamics through their associated operators.</p>
+<p>These two settings share a common structure: a pair of dual linear operators describing the evolution of observables and distributions. However, they differ in how randomness enters the system and how observables evolve.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Concept</p></th>
+<th class="head"><p>Markov Processes (Stochastic)</p></th>
+<th class="head"><p>Dynamical Systems (Deterministic)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Evolution Rule</p></td>
+<td><p>Transition kernel <span class="math notranslate nohighlight">\(p(x, dy)\)</span></p></td>
+<td><p>Map <span class="math notranslate nohighlight">\(T : \mathcal{X} \to \mathcal{X}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Observable Operator</p></td>
+<td><p>Markov operator <span class="math notranslate nohighlight">\(\mathcal{A}_F f(x) = \int f(y)\, p(x, dy)\)</span></p></td>
+<td><p>Koopman operator <span class="math notranslate nohighlight">\(\mathcal{K} f(x) = f(T(x))\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Dual Operator (Measures)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathcal{A}^* \mu(B) = \int p(x, B)\, d\mu(x)\)</span></p></td>
+<td><p>Pushforward <span class="math notranslate nohighlight">\(T_* \mu(B) = \mu(T^{-1}(B))\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Dual Operator Name</p></td>
+<td><p>—</p></td>
+<td><p>Perron–Frobenius operator <span class="math notranslate nohighlight">\(\mathcal{P} = T_*\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Randomness</p></td>
+<td><p>Probabilistic transitions</p></td>
+<td><p>None (purely deterministic)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Linearity of Dynamics</p></td>
+<td><p>Generally nonlinear</p></td>
+<td><p>Can be nonlinear</p></td>
+</tr>
+<tr class="row-even"><td><p>Linearity of Operator</p></td>
+<td><p>Linear</p></td>
+<td><p>Linear</p></td>
+</tr>
+<tr class="row-odd"><td><p>Common Goal</p></td>
+<td><p>Study long-term distributions &amp; statistics</p></td>
+<td><p>Study spectral structure &amp; invariant sets</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This parallel structure motivates the use of operator-theoretic tools for analyzing a wide variety of systems—stochastic or deterministic—through a unified mathematical lens.</p>
+</section>
+</section>
+<section id="functional-setting-and-invariant-measures">
+<h2>Functional Setting and Invariant Measures<a class="headerlink" href="#functional-setting-and-invariant-measures" title="Link to this heading">#</a></h2>
+<p>In the previous section, we defined the Koopman operator <span class="math notranslate nohighlight">\(\mathcal{K}\)</span> as a linear operator that evolves observables through composition with a deterministic map <span class="math notranslate nohighlight">\(T\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{K}f(x) = f(T(x)).
+\]</div>
+<p>However, we did not specify the space to which the observable <span class="math notranslate nohighlight">\(f : \mathcal{X} \to \mathbb{C}\)</span> belongs. This choice is not merely technical—it fundamentally shapes the <strong>boundedness</strong>, <strong>continuity</strong>, and <strong>spectral behavior</strong> of <span class="math notranslate nohighlight">\(\mathcal{K}\)</span>.</p>
+<p>The function space determines not only whether <span class="math notranslate nohighlight">\(\mathcal{K}\)</span> is well-defined and bounded, but also which dynamical features it can reveal: resonances, coherent structures, long-term averages, or transient modes.</p>
+<p>In fact, the same dynamical system can exhibit very different spectral signatures depending on the function space in which <span class="math notranslate nohighlight">\(\mathcal{K}\)</span> is analyzed.</p>
+<p>In this section, we explore these functional settings in detail, and discuss how they influence the Koopman operator’s analytical properties and practical usefulness.</p>
+<section id="common-function-spaces-for-observables">
+<h3>Common Function Spaces for Observables<a class="headerlink" href="#common-function-spaces-for-observables" title="Link to this heading">#</a></h3>
+<p>Before analyzing the Koopman operator, it’s important to clarify the typical <strong>function spaces</strong> used to represent observables in dynamical systems. Each space imposes different regularity, integrability, or boundedness constraints on functions, and these choices directly influence how the Koopman operator behaves—especially in terms of its boundedness, spectral properties, and analytic structure.</p>
+<p>The table below summarizes the most commonly used spaces, their notation, type (Hilbert or Banach), and typical use cases.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Function Space</p></th>
+<th class="head"><p>Notation</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Common Use Cases</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Square-integrable</p></td>
+<td><p><span class="math notranslate nohighlight">\(L^2_\mu(\mathcal{X})\)</span></p></td>
+<td><p>Hilbert</p></td>
+<td><p>Functions with finite variance under <span class="math notranslate nohighlight">\(\mu\)</span></p></td>
+<td><p>Spectral theory, ergodicity, inner products</p></td>
+</tr>
+<tr class="row-odd"><td><p>Bounded measurable</p></td>
+<td><p><span class="math notranslate nohighlight">\(L^\infty(\mathcal{X})\)</span></p></td>
+<td><p>Banach</p></td>
+<td><p>All functions with bounded essential sup norm</p></td>
+<td><p>General dynamics, growth/decay detection</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(p\)</span>-integrable</p></td>
+<td><p><span class="math notranslate nohighlight">\(L^p_\mu(\mathcal{X})\)</span></p></td>
+<td><p>Banach</p></td>
+<td><p>For <span class="math notranslate nohighlight">\(1 \leq p &lt; \infty\)</span>, allows unbounded observables</p></td>
+<td><p>Ergodic theorems, averages, indicator functions</p></td>
+</tr>
+<tr class="row-odd"><td><p>Continuous (compact domain)</p></td>
+<td><p><span class="math notranslate nohighlight">\(C^0(\mathcal{X})\)</span></p></td>
+<td><p>Banach</p></td>
+<td><p>Continuous functions with sup norm</p></td>
+<td><p>Topological dynamics, symbolic systems</p></td>
+</tr>
+<tr class="row-even"><td><p>Hardy</p></td>
+<td><p><span class="math notranslate nohighlight">\(H^2\)</span></p></td>
+<td><p>Hilbert</p></td>
+<td><p>Analytic functions with square-summable coeffs</p></td>
+<td><p>Resonance, control theory, analytic maps</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sobolev</p></td>
+<td><p><span class="math notranslate nohighlight">\(W^{k,p}\)</span> or <span class="math notranslate nohighlight">\(H^s\)</span></p></td>
+<td><p>Banach/Hilbert</p></td>
+<td><p>Functions with <span class="math notranslate nohighlight">\(k\)</span> derivatives in <span class="math notranslate nohighlight">\(L^p\)</span></p></td>
+<td><p>Control, PDE systems, stability analysis</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The Koopman operator is always linear, but its properties—boundedness, compactness, spectral radius, norm—depend <strong>entirely</strong> on the function space it acts on. <strong>The more structure</strong> you require of your observables (e.g., smoothness, analyticity), the <strong>more information and spectral regularity</strong> you gain,  but at the cost of <strong>less generality</strong>.</p>
+<p>We will focus primarily on the <span class="math notranslate nohighlight">\(L^p_\mu\)</span> family, but briefly mention others when relevant.</p>
+</section>
+<section id="invariant-measures-and-motivation">
+<h3>Invariant Measures and Motivation<a class="headerlink" href="#invariant-measures-and-motivation" title="Link to this heading">#</a></h3>
+<p>To study the Koopman operator on spaces like <span class="math notranslate nohighlight">\(L^2_\mu(\mathcal{X})\)</span>, we need to choose a measure <span class="math notranslate nohighlight">\(\mu\)</span>. Not all choices lead to well-behaved operators.</p>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>Invariant Measure</em></p>
+<p>Let <span class="math notranslate nohighlight">\(T : \mathcal{X} \to \mathcal{X}\)</span> be a measurable map. A probability measure <span class="math notranslate nohighlight">\(\mu\)</span> is <strong>invariant</strong> under <span class="math notranslate nohighlight">\(T\)</span> if</p>
+<div class="math notranslate nohighlight">
+\[
+\mu(T^{-1}(B)) = \mu(B), \quad \forall B \in \Sigma_{\mathcal{X}},
+\]</div>
+<p>or equivalently, <span class="math notranslate nohighlight">\(T_* \mu = \mu\)</span>.</p>
+</div>
+<p>This condition ensures that the measure is preserved under the dynamics—i.e., if <span class="math notranslate nohighlight">\(X_0 \sim \mu\)</span>, then <span class="math notranslate nohighlight">\(X_t \sim \mu\)</span> for all <span class="math notranslate nohighlight">\(t \in \mathbb{N}\)</span>.</p>
+<div class="tip admonition">
+<p class="admonition-title">Remark: <em>Why invariant measures matter</em></p>
+<p>We will see that, if <span class="math notranslate nohighlight">\(\mu\)</span> is an invariant measure, then</p>
+<ul class="simple">
+<li><p>The Koopman operator <strong>preserves the <span class="math notranslate nohighlight">\(L^p_\mu\)</span> norm</strong>.</p></li>
+<li><p>In particular, it becomes an <strong>isometry</strong> on <span class="math notranslate nohighlight">\(L^2_\mu\)</span>, meaning that <span class="math notranslate nohighlight">\(\|\mathcal{K} f\|_{L^2_\mu} = \|f\|_{L^2_\mu}\)</span>.</p></li>
+</ul>
+</div>
+<p>At this point, a natural question arises: <strong>do invariant measures always exist</strong>?</p>
+<p>In general, the answer depends on both the structure of the map <span class="math notranslate nohighlight">\(T\)</span> and the topological properties of the space <span class="math notranslate nohighlight">\(\mathcal{X}\)</span>. Fortunately, under very mild assumptions, we can guarantee the existence of at least one invariant measure.</p>
+<p>This mirrors the situation encountered in the <strong>Markovian setting</strong>, where we used the <strong>Krylov–Bogoliubov theorem</strong> to construct invariant measures under mild compactness and continuity conditions. The key idea—averaging the empirical occupation of the system over time—can be adapted almost directly to the deterministic case.</p>
+<div class="important admonition">
+<p class="admonition-title">Theorem: <em>Krylov–Bogoliubov (deterministic version)</em></p>
+<p>Let <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> be a compact metric space, and let <span class="math notranslate nohighlight">\(T : \mathcal{X} \to \mathcal{X}\)</span> be continuous. Then there exists at least one Borel probability measure <span class="math notranslate nohighlight">\(\mu\)</span> such that <span class="math notranslate nohighlight">\(T_* \mu = \mu\)</span>.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Proof Sketch</p>
+<p>Start from any initial point <span class="math notranslate nohighlight">\(x_0 \in \mathcal{X}\)</span> and define the sequence of empirical measures:</p>
+<div class="math notranslate nohighlight">
+\[
+\mu_n := \frac{1}{n} \sum_{t=0}^{n-1} \delta_{T^t(x_0)}.
+\]</div>
+<p>Since <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> is compact, the space of probability measures on <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> (with the weak-* topology) is also compact by <strong>Prokhorov’s theorem</strong>. The sequence <span class="math notranslate nohighlight">\((\mu_n)\)</span> is tight and admits at least one weak-* accumulation point. It can be shown that any such limit <span class="math notranslate nohighlight">\(\mu\)</span> satisfies <span class="math notranslate nohighlight">\(T_* \mu = \mu\)</span>.</p>
+</div>
+<p>This construction is conceptually identical to what we did for Markov chains, where the transition kernel was used to evolve a distribution forward. In the deterministic case, the transition kernel is a Dirac measure: <span class="math notranslate nohighlight">\(p(x, \cdot) = \delta_{T(x)}\)</span>, making the deterministic case a special instance of the Markov framework.</p>
+<p>We now present a few important examples of invariant measures in deterministic systems. These illustrate different behaviors: fixed points, periodic motion, and volume-preserving flows.</p>
+<div class="note admonition">
+<p class="admonition-title">Examples of Invariant Measures</p>
+<p>Here are several classical deterministic systems that admit invariant measures:</p>
+<p><strong>Fixed Point</strong>: If <span class="math notranslate nohighlight">\(T(x^*) = x^*\)</span>, then the Dirac measure <span class="math notranslate nohighlight">\(\mu = \delta_{x^*}\)</span> is invariant.</p>
+<p><strong>Rotation on the Circle</strong>: Let <span class="math notranslate nohighlight">\(T(x) = x + \alpha \mod 1\)</span> on <span class="math notranslate nohighlight">\(\mathbb{T} = \mathbb{R}/\mathbb{Z}\)</span>. Then the Lebesgue probability measure on <span class="math notranslate nohighlight">\([0,1)\)</span> is invariant under <span class="math notranslate nohighlight">\(T\)</span>.</p>
+<p><strong>Volume-Preserving Map on <span class="math notranslate nohighlight">\(\mathbb{R}^n\)</span></strong>: If <span class="math notranslate nohighlight">\(T : \mathbb{R}^n \to \mathbb{R}^n\)</span> is a smooth bijection with <span class="math notranslate nohighlight">\(\det(DT(x)) = 1\)</span> for all <span class="math notranslate nohighlight">\(x\)</span>, then the (possibly infinite) Lebesgue measure on <span class="math notranslate nohighlight">\(\mathbb{R}^n\)</span> is invariant. When <span class="math notranslate nohighlight">\(T\)</span> preserves a compact set <span class="math notranslate nohighlight">\(A \subset \mathbb{R}^n\)</span>, one often uses the normalized Lebesgue measure on <span class="math notranslate nohighlight">\(A\)</span> to define a probability invariant measure.</p>
+<p><strong>Expanding Map (Doubling)</strong>: Let <span class="math notranslate nohighlight">\(T(x) = 2x \mod 1\)</span> on <span class="math notranslate nohighlight">\([0,1]\)</span>. The Lebesgue probability measure on <span class="math notranslate nohighlight">\([0,1]\)</span> is invariant under <span class="math notranslate nohighlight">\(T\)</span>.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Proofs</p>
+<p><strong>Fixed Point</strong><br />
+Let <span class="math notranslate nohighlight">\(T(x^*) = x^*\)</span>. Then for any measurable set <span class="math notranslate nohighlight">\(B\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+T_* \delta_{x^*}(B) = \delta_{x^*}(T^{-1}(B)) = 
+\begin{cases}
+1 &amp; \text{if } x^* \in T^{-1}(B) \\
+0 &amp; \text{otherwise}.
+\end{cases}
+\end{split}\]</div>
+<p>Since <span class="math notranslate nohighlight">\(T(x^*) = x^*\)</span>, we have <span class="math notranslate nohighlight">\(x^* \in T^{-1}(B)\)</span> if and only if <span class="math notranslate nohighlight">\(x^* \in B\)</span>, so <span class="math notranslate nohighlight">\(T_* \delta_{x^*} = \delta_{x^*}\)</span>.</p>
+<hr class="docutils" />
+<p><strong>Rotation on the Circle</strong><br />
+Let <span class="math notranslate nohighlight">\(T(x) = x + \alpha \mod 1\)</span>. Then for any measurable set <span class="math notranslate nohighlight">\(B \subset \mathbb{T}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+T^{-1}(B) = B - \alpha.
+\]</div>
+<p>Since the Lebesgue measure <span class="math notranslate nohighlight">\(\mu\)</span> on <span class="math notranslate nohighlight">\(\mathbb{T}\)</span> is translation-invariant:</p>
+<div class="math notranslate nohighlight">
+\[
+\mu(T^{-1}(B)) = \mu(B - \alpha) = \mu(B).
+\]</div>
+<p>Hence, <span class="math notranslate nohighlight">\(T_* \mu = \mu\)</span>.</p>
+<hr class="docutils" />
+<p><strong>Volume-Preserving Map</strong><br />
+Let <span class="math notranslate nohighlight">\(T : \mathbb{R}^n \to \mathbb{R}^n\)</span> be a smooth bijection with <span class="math notranslate nohighlight">\(\det(DT(x)) = 1\)</span>. Let <span class="math notranslate nohighlight">\(\mu\)</span> denote the Lebesgue measure on <span class="math notranslate nohighlight">\(\mathbb{R}^n\)</span>. Then by the change of variables formula:</p>
+<div class="math notranslate nohighlight">
+\[
+\mu(T^{-1}(B)) = \int_{T^{-1}(B)} dx = \int_B |\det(DT^{-1}(y))| \, dy = \int_B dy = \mu(B),
+\]</div>
+<p>so <span class="math notranslate nohighlight">\(T_* \mu = \mu\)</span>.</p>
+<p>If <span class="math notranslate nohighlight">\(T\)</span> preserves a compact measurable subset <span class="math notranslate nohighlight">\(A \subset \mathbb{R}^n\)</span> (i.e., <span class="math notranslate nohighlight">\(T(A) = A\)</span>), one may define a <strong>probability measure</strong> by normalizing the restricted Lebesgue measure:</p>
+<div class="math notranslate nohighlight">
+\[
+\mu_A(B) := \frac{\text{Leb}(B \cap A)}{\text{Leb}(A)}.
+\]</div>
+<h2 class="rubric" id="this-mu-a-is-then-t-invariant-on-a">This <span class="math notranslate nohighlight">\(\mu_A\)</span> is then <span class="math notranslate nohighlight">\(T\)</span>-invariant on <span class="math notranslate nohighlight">\(A\)</span>.</h2>
+<p><strong>Expanding Map: Doubling on [0,1]</strong><br />
+Define <span class="math notranslate nohighlight">\(T(x) = 2x \mod 1\)</span> on <span class="math notranslate nohighlight">\([0,1]\)</span>. Then for any measurable set <span class="math notranslate nohighlight">\(B \subset [0,1]\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+T^{-1}(B) = \left\{ \frac{x}{2} \in [0,1/2] : x \in B \right\} \cup \left\{ \frac{x+1}{2} \in [1/2,1] : x \in B \right\}.
+\]</div>
+<p>That is,</p>
+<div class="math notranslate nohighlight">
+\[
+T^{-1}(B) = \left\{ \frac{x}{2} : x \in B \right\} \cup \left\{ \frac{x+1}{2} : x \in B \right\}.
+\]</div>
+<p>Because Lebesgue measure scales linearly under affine transformations, we get:</p>
+<div class="math notranslate nohighlight">
+\[
+\mu(T^{-1}(B)) = \frac{1}{2} \mu(B) + \frac{1}{2} \mu(B) = \mu(B).
+\]</div>
+<p>Thus, <span class="math notranslate nohighlight">\(T_* \mu = \mu\)</span> and the Lebesgue probability measure on <span class="math notranslate nohighlight">\([0,1]\)</span> is invariant.</p>
+</div>
+</section>
+</section>
+<section id="boundedness-of-the-koopman-operator">
+<h2>Boundedness of the Koopman Operator<a class="headerlink" href="#boundedness-of-the-koopman-operator" title="Link to this heading">#</a></h2>
+<section id="why-boundedness-matters">
+<h3>Why Boundedness Matters<a class="headerlink" href="#why-boundedness-matters" title="Link to this heading">#</a></h3>
+<p>Boundedness is a central concept in functional analysis. When the Koopman operator <span class="math notranslate nohighlight">\(\mathcal{K}\)</span> is <strong>bounded</strong> on a given function space (like <span class="math notranslate nohighlight">\(L^2_\mu\)</span>, <span class="math notranslate nohighlight">\(L^p\)</span>, or <span class="math notranslate nohighlight">\(C^0\)</span>), it satisfies the estimate</p>
+<div class="math notranslate nohighlight">
+\[
+\|\mathcal{K} f\| \leq C \|f\|
+\]</div>
+<p>for some constant <span class="math notranslate nohighlight">\(C &gt; 0\)</span> and all <span class="math notranslate nohighlight">\(f\)</span> in the space. This property has powerful consequences:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mathcal{K}\)</span> is <strong>continuous</strong>, so it interacts well with limits and approximations;</p></li>
+<li><p>It can be iterated stably (i.e., <span class="math notranslate nohighlight">\(\mathcal{K}^n f\)</span> is meaningful and uniformly controlled);</p></li>
+<li><p>We can apply <strong>spectral theory</strong> and <strong>functional calculus</strong>, which rely on boundedness to define the spectrum, compute projections, and analyze long-term dynamics;</p></li>
+<li><p>Numerically, a bounded operator allows stable computations and reliable approximations.</p></li>
+</ul>
+<p>Boundedness is thus a prerequisite for developing most of the analytic and numerical tools used in Koopman theory.</p>
+<div class="warning admonition">
+<p class="admonition-title">Why Unbounded Koopman Operators Are Problematic</p>
+<p>In infinite-dimensional spaces, an operator that is <strong>unbounded</strong> cannot be defined on the whole space. This is not just a technicality—it is a fundamental consequence of the <strong>Closed Graph Theorem</strong>:</p>
+<blockquote>
+<div><p>If a linear operator on a Banach space is defined on all of the space and is closed, then it must be bounded.</p>
+</div></blockquote>
+<p>This implies the contrapositive:</p>
+<blockquote>
+<div><p>If an operator is <strong>unbounded</strong>, then it <strong>cannot</strong> be defined everywhere.</p>
+</div></blockquote>
+<p>In the Koopman setting, this means:</p>
+<ul class="simple">
+<li><p>If <span class="math notranslate nohighlight">\(T\)</span> is highly nonlinear or <span class="math notranslate nohighlight">\(f\)</span> is unbounded, the composition <span class="math notranslate nohighlight">\(f \circ T\)</span> may not lie in the same function space.</p></li>
+<li><p>As a result, <span class="math notranslate nohighlight">\(\mathcal{K} f\)</span> may not be defined for all <span class="math notranslate nohighlight">\(f\)</span> in the space, and the operator must be treated as <strong>partial</strong>, with domain <span class="math notranslate nohighlight">\(\mathcal{D}(\mathcal{K}) \subsetneq \mathcal{F}\)</span>.</p></li>
+<li><p>Such operators require special care: their <strong>domains must be specified</strong>, and standard spectral tools apply only if the operator is <strong>densely defined</strong> and <strong>closable</strong>.</p></li>
+</ul>
+<p>For this reason, Koopman theory is usually developed in settings where <span class="math notranslate nohighlight">\(\mathcal{K}\)</span> is bounded—either by assuming an invariant measure (as in <span class="math notranslate nohighlight">\(L^2_\mu\)</span>) or by choosing function spaces (like <span class="math notranslate nohighlight">\(L^\infty\)</span> or <span class="math notranslate nohighlight">\(C^0\)</span>) where boundedness is automatic.</p>
+</div>
+<p>In the following subsections, we will explore in detail <strong>when and where</strong> the Koopman operator is bounded—and how this depends on the interplay between the dynamics <span class="math notranslate nohighlight">\(T\)</span>, the function space, and the presence of an invariant measure.</p>
+</section>
+<section id="boundedness-on-l-p-mu-mathcal-x">
+<h3>Boundedness on <span class="math notranslate nohighlight">\( L^p_\mu(\mathcal{X}) \)</span><a class="headerlink" href="#boundedness-on-l-p-mu-mathcal-x" title="Link to this heading">#</a></h3>
+<p>Let <span class="math notranslate nohighlight">\((\mathcal{X}, \Sigma_{\mathcal{X}}, \mu)\)</span> be a measure space, and suppose <span class="math notranslate nohighlight">\( T : \mathcal{X} \to \mathcal{X} \)</span> is measurable. We now investigate under what conditions the Koopman operator</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{K} f(x) := f(T(x))
+\]</div>
+<p>is bounded on <span class="math notranslate nohighlight">\( L^p_\mu(\mathcal{X}) \)</span> for <span class="math notranslate nohighlight">\( 1 \leq p &lt; \infty \)</span>.</p>
+<section id="when-is-the-operator-bounded">
+<h4>When is the operator bounded?<a class="headerlink" href="#when-is-the-operator-bounded" title="Link to this heading">#</a></h4>
+<p>The key condition is that the measure <span class="math notranslate nohighlight">\( \mu \)</span> is <strong>invariant</strong> under <span class="math notranslate nohighlight">\( T \)</span>. When this holds, the Koopman operator is not only bounded — it is an <strong>isometry</strong>.</p>
+<div class="important admonition">
+<p class="admonition-title">Proposition: <em>Isometry on <span class="math notranslate nohighlight">\( L^p_\mu \)</span> when <span class="math notranslate nohighlight">\( \mu \)</span> is invariant</em></p>
+<p>Let <span class="math notranslate nohighlight">\( \mu \)</span> be a <span class="math notranslate nohighlight">\( T \)</span>-invariant measure. Then the Koopman operator <span class="math notranslate nohighlight">\( \mathcal{K} \)</span> is an <strong>isometry</strong> on <span class="math notranslate nohighlight">\( L^p_\mu(\mathcal{X}) \)</span> for all <span class="math notranslate nohighlight">\( 1 \leq p &lt; \infty \)</span>. That is,</p>
+<div class="math notranslate nohighlight">
+\[
+\|\mathcal{K} f\|_{L^p_\mu} = \|f\|_{L^p_\mu}, \quad \forall f \in L^p_\mu.
+\]</div>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Proof</p>
+<p>We compute:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align*}
+\|\mathcal{K} f\|_{L^p_\mu}^p 
+&amp;= \int_{\mathcal{X}} |f(T(x))|^p \, d\mu(x) \\
+&amp;= \int_{\mathcal{X}} |f(y)|^p \, d\mu(T^{-1}(y)) \quad \text{(change of variable)} \\
+&amp;= \int_{\mathcal{X}} |f(y)|^p \, d\mu(y) \quad \text{(invariance)} \\
+&amp;= \|f\|_{L^p_\mu}^p.
+\end{align*}
+\end{split}\]</div>
+</div>
+</section>
+<section id="what-if-mu-is-not-invariant">
+<h4>What if <span class="math notranslate nohighlight">\( \mu \)</span> is not invariant?<a class="headerlink" href="#what-if-mu-is-not-invariant" title="Link to this heading">#</a></h4>
+<p>If <span class="math notranslate nohighlight">\( \mu \)</span> is <strong>not</strong> invariant, then in general:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\( \mathcal{K} f \)</span> may not lie in <span class="math notranslate nohighlight">\( L^p_\mu \)</span>, even if <span class="math notranslate nohighlight">\( f \in L^p_\mu \)</span>;</p></li>
+<li><p>Or it may be defined but <strong>not bounded</strong>;</p></li>
+<li><p>Even worse, <span class="math notranslate nohighlight">\( \mathcal{K} \)</span> may be <strong>unbounded</strong>, and hence not defined on all of <span class="math notranslate nohighlight">\( L^p_\mu \)</span>.</p></li>
+</ul>
+<p>For example, if <span class="math notranslate nohighlight">\( T \)</span> expands volumes and <span class="math notranslate nohighlight">\( f \)</span> grows quickly, then <span class="math notranslate nohighlight">\( f \circ T \)</span> may lie outside <span class="math notranslate nohighlight">\( L^p_\mu \)</span>.</p>
+<p>This is why invariant measures play such a fundamental role: they guarantee the Koopman operator is well-behaved in <span class="math notranslate nohighlight">\( L^p \)</span> spaces and enable a stable spectral theory.</p>
+</section>
+</section>
+<section id="boundedness-on-l-infty-mathcal-x">
+<h3>Boundedness on <span class="math notranslate nohighlight">\( L^\infty(\mathcal{X}) \)</span><a class="headerlink" href="#boundedness-on-l-infty-mathcal-x" title="Link to this heading">#</a></h3>
+<p>In contrast to the case of <span class="math notranslate nohighlight">\( L^p_\mu \)</span>, where boundedness of the Koopman operator may depend on the invariance of the measure <span class="math notranslate nohighlight">\( \mu \)</span>, the space <span class="math notranslate nohighlight">\( L^\infty(\mathcal{X}) \)</span> always provides a safe environment: the Koopman operator is <strong>automatically bounded</strong>.</p>
+<div class="important admonition">
+<p class="admonition-title">Proposition: <em>Contractivity on <span class="math notranslate nohighlight">\( L^\infty \)</span></em></p>
+<p>Let <span class="math notranslate nohighlight">\( T : \mathcal{X} \to \mathcal{X} \)</span> be a measurable map. Then the Koopman operator <span class="math notranslate nohighlight">\( \mathcal{K} f = f \circ T \)</span> is bounded on <span class="math notranslate nohighlight">\( L^\infty(\mathcal{X}) \)</span>, with</p>
+<div class="math notranslate nohighlight">
+\[
+\|\mathcal{K} f\|_{L^\infty} \leq \|f\|_{L^\infty}.
+\]</div>
+<p>Hence, <span class="math notranslate nohighlight">\( \mathcal{K} \)</span> is a <strong>contraction</strong>: its operator norm satisfies <span class="math notranslate nohighlight">\( \|\mathcal{K}\| \leq 1 \)</span>.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Proof</p>
+<p>We compute:</p>
+<p>\begin{align*}
+|\mathcal{K} f|<em>{L^\infty} &amp;= \operatorname*{ess,sup}</em>{x \in \mathcal{X}} |f(T(x))| \
+&amp;\leq \operatorname*{ess,sup}<em>{y \in \mathcal{X}} |f(y)| = |f|</em>{L^\infty}.
+\end{align*}</p>
+<p>This uses the fact that the essential supremum is invariant under composition with a measurable map.</p>
+</div>
+<section id="why-this-matters">
+<h4>Why this matters<a class="headerlink" href="#why-this-matters" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p><strong>No measure required</strong>: Unlike in <span class="math notranslate nohighlight">\( L^p \)</span> spaces, boundedness here does <strong>not</strong> rely on an invariant measure.</p></li>
+<li><p><strong>Safe default</strong>: This makes <span class="math notranslate nohighlight">\( L^\infty \)</span> a <strong>safe and general choice</strong>, especially when the system is non-conservative, dissipative, or the invariant measure is unknown.</p></li>
+<li><p><strong>Natural space</strong>: Observables in <span class="math notranslate nohighlight">\( L^\infty \)</span> include indicators, step functions, and all bounded real-valued measurements of the state.</p></li>
+</ul>
+<p>However, because <span class="math notranslate nohighlight">\( L^\infty \)</span> is not a Hilbert space, we <strong>lose the inner product structure</strong> that underpins much of spectral theory (e.g., orthogonal decompositions). We gain robustness, but at the expense of spectral richness.</p>
+</section>
+</section>
+<section id="boundedness-on-c-0-mathcal-x">
+<h3>Boundedness on <span class="math notranslate nohighlight">\( C^0(\mathcal{X}) \)</span><a class="headerlink" href="#boundedness-on-c-0-mathcal-x" title="Link to this heading">#</a></h3>
+<p>Another natural setting for the Koopman operator is the space of continuous functions, denoted <span class="math notranslate nohighlight">\( C^0(\mathcal{X}) \)</span>, where <span class="math notranslate nohighlight">\( \mathcal{X} \)</span> is a compact metric space. This context is common in <strong>topological dynamics</strong>, where continuity rather than integrability is the main concern.</p>
+<p>In this setting, the Koopman operator is again <strong>always bounded</strong>, provided that the map <span class="math notranslate nohighlight">\( T \)</span> itself is continuous.</p>
+<div class="important admonition">
+<p class="admonition-title">Proposition: <em>Boundedness on <span class="math notranslate nohighlight">\( C^0(\mathcal{X}) \)</span></em></p>
+<p>Let <span class="math notranslate nohighlight">\( \mathcal{X} \)</span> be a compact metric space, and let <span class="math notranslate nohighlight">\( T : \mathcal{X} \to \mathcal{X} \)</span> be continuous. Then the Koopman operator <span class="math notranslate nohighlight">\( \mathcal{K} f = f \circ T \)</span> maps <span class="math notranslate nohighlight">\( C^0(\mathcal{X}) \)</span> to itself and satisfies</p>
+<div class="math notranslate nohighlight">
+\[
+\|\mathcal{K} f\|_\infty \leq \|f\|_\infty,
+\]</div>
+<p>for all <span class="math notranslate nohighlight">\( f \in C^0(\mathcal{X}) \)</span>. In particular, <span class="math notranslate nohighlight">\( \mathcal{K} \)</span> is a contraction on <span class="math notranslate nohighlight">\( C^0(\mathcal{X}) \)</span>.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Proof</p>
+<p>Since <span class="math notranslate nohighlight">\( T \)</span> is continuous and <span class="math notranslate nohighlight">\( f \in C^0(\mathcal{X}) \)</span>, the composition <span class="math notranslate nohighlight">\( f \circ T \)</span> is also continuous. Moreover,</p>
+<div class="math notranslate nohighlight">
+\[
+\|\mathcal{K} f\|_\infty = \sup_{x \in \mathcal{X}} |f(T(x))| \leq \sup_{y \in \mathcal{X}} |f(y)| = \|f\|_\infty.
+\]</div>
+</div>
+<section id="comments">
+<h4>Comments<a class="headerlink" href="#comments" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>This space does <strong>not require a measure</strong> at all.</p></li>
+<li><p>The Koopman operator acts naturally on observables like distance functions, potentials, or continuous physical measurements.</p></li>
+<li><p>The compactness of <span class="math notranslate nohighlight">\( \mathcal{X} \)</span> ensures that the supremum norm is finite and well-defined.</p></li>
+<li><p>Just as in <span class="math notranslate nohighlight">\( L^\infty \)</span>, we again lack a Hilbert structure, so many spectral tools from <span class="math notranslate nohighlight">\( L^2 \)</span> do not carry over directly.</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="spectral-properties-of-koopman-operators">
+<h2>Spectral Properties of Koopman Operators<a class="headerlink" href="#spectral-properties-of-koopman-operators" title="Link to this heading">#</a></h2>
+<p>One of the most striking features of the Koopman operator is that even though the underlying system is often nonlinear, its action on observables is <strong>linear</strong>. This means we can meaningfully speak about spectral properties such as <strong>eigenvalues</strong> and <strong>eigenfunctions</strong>, as in linear algebra or Fourier analysis. The <strong>structure of the spectrum</strong> reveal whether the system has:</p>
+<ul class="simple">
+<li><p>Fixed points, periodic or quasiperiodic motion;</p></li>
+<li><p>Stable or unstable modes;</p></li>
+<li><p>Decaying transients or persistent oscillations.</p></li>
+</ul>
+<p>But a critical subtlety is that the <strong>spectrum of the Koopman operator is not intrinsic to the system</strong> — it depends heavily on the <strong>function space</strong> where the operator acts. Whether we’re working in <span class="math notranslate nohighlight">\(L^2\)</span>, <span class="math notranslate nohighlight">\(L^\infty\)</span>, or <span class="math notranslate nohighlight">\(C^0\)</span>, the spectrum can look entirely different.</p>
+<p>We begin by exploring how this choice of functional space impacts the spectral theory.</p>
+<section id="functional-spaces-and-their-spectral-implications">
+<h3>Functional Spaces and Their Spectral Implications<a class="headerlink" href="#functional-spaces-and-their-spectral-implications" title="Link to this heading">#</a></h3>
+<p>Different function spaces grant different analytical tools. In particular, the <strong>presence or absence of a scalar product</strong> (inner product) determines which kinds of spectral analysis can be meaningfully applied.</p>
+<section id="l-2-mu-mathcal-x-the-ideal-setting">
+<h4><span class="math notranslate nohighlight">\(L^2_\mu(\mathcal{X})\)</span>: The ideal setting<a class="headerlink" href="#l-2-mu-mathcal-x-the-ideal-setting" title="Link to this heading">#</a></h4>
+<p>When <span class="math notranslate nohighlight">\(\mu\)</span> is an invariant measure and we work in <span class="math notranslate nohighlight">\(L^2_\mu\)</span>, the Koopman operator is:</p>
+<ul class="simple">
+<li><p><strong>Linear</strong>, <strong>bounded</strong>, and <strong>isometric</strong>;</p></li>
+<li><p>A <strong>Hilbert space</strong> structure is available (inner product, projections, orthogonality);</p></li>
+<li><p>The <strong>spectral theorem</strong> applies for unitary operators;</p></li>
+<li><p>Eigenfunctions can be used to build <strong>orthogonal decompositions</strong>;</p></li>
+<li><p>Spectral radius is bounded by <span class="math notranslate nohighlight">\(1\)</span>.</p></li>
+</ul>
+<p>This makes <span class="math notranslate nohighlight">\(L^2_\mu\)</span> the canonical setting for theoretical and computational Koopman analysis.</p>
+</section>
+<section id="l-infty-mathcal-x-bounded-but-no-inner-product">
+<h4><span class="math notranslate nohighlight">\(L^\infty(\mathcal{X})\)</span>: Bounded, but no inner product<a class="headerlink" href="#l-infty-mathcal-x-bounded-but-no-inner-product" title="Link to this heading">#</a></h4>
+<p>Koopman is always bounded on <span class="math notranslate nohighlight">\(L^\infty\)</span>, even without an invariant measure. However:</p>
+<ul class="simple">
+<li><p>There is <strong>no scalar product</strong>;</p></li>
+<li><p>We cannot define <strong>adjoints</strong>, <strong>self-adjointness</strong>, or <strong>orthogonal decompositions</strong>;</p></li>
+<li><p>Spectral theory exists, but is more limited (point spectrum only, no projections);</p></li>
+<li><p>Useful in general settings where no measure is known.</p></li>
+</ul>
+</section>
+<section id="c-0-mathcal-x-continuous-dynamics">
+<h4><span class="math notranslate nohighlight">\(C^0(\mathcal{X})\)</span>: Continuous dynamics<a class="headerlink" href="#c-0-mathcal-x-continuous-dynamics" title="Link to this heading">#</a></h4>
+<p>When <span class="math notranslate nohighlight">\(T\)</span> is continuous and <span class="math notranslate nohighlight">\(\mathcal{X}\)</span> is compact, Koopman acts boundedly on the space of continuous functions:</p>
+<ul class="simple">
+<li><p>Useful in <strong>topological dynamics</strong>;</p></li>
+<li><p>Still no scalar product, but strong continuity structure;</p></li>
+<li><p>Spectrum reflects topological, not measure-theoretic, behavior.</p></li>
+</ul>
+</section>
+<section id="sobolev-hardy-and-analytic-spaces">
+<h4>Sobolev, Hardy, and analytic spaces<a class="headerlink" href="#sobolev-hardy-and-analytic-spaces" title="Link to this heading">#</a></h4>
+<p>More specialized spaces give additional structure:</p>
+<ul class="simple">
+<li><p><strong>Hardy spaces</strong> (like <span class="math notranslate nohighlight">\(H^2\)</span>) are analytic and yield <strong>discrete spectrum</strong>;</p></li>
+<li><p><strong>Sobolev spaces</strong> add smoothness and enable <strong>PDE connections</strong>;</p></li>
+<li><p>These spaces often lead to <strong>compact Koopman operators</strong> and <strong>eigenvalue decay</strong>.</p></li>
+</ul>
+</section>
+<section id="summary-spectral-behavior-by-function-space">
+<h4>Summary: Spectral Behavior by Function Space<a class="headerlink" href="#summary-spectral-behavior-by-function-space" title="Link to this heading">#</a></h4>
+<p>Below is a comparison of the Koopman operator’s behavior across different functional settings. While spectral theory can be applied in all of them, the tools available and the structure of the spectrum depend critically on whether the space has a scalar product, how smooth the observables are, and whether an invariant measure exists.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Space</p></th>
+<th class="head"><p>Spectral Theory</p></th>
+<th class="head"><p>Spectral Tools Available</p></th>
+<th class="head"><p>Pros</p></th>
+<th class="head"><p>Cons</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\( L^2_\mu(\mathcal{X}) \)</span></p></td>
+<td><p>Full</p></td>
+<td><p>Spectral theorem, adjoint, orthogonality</p></td>
+<td><p>Inner product, isometry, modal decompositions</p></td>
+<td><p>Requires invariant measure</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\( L^\infty(\mathcal{X}) \)</span></p></td>
+<td><p>Weaker</p></td>
+<td><p>Point spectrum, spectral radius</p></td>
+<td><p>Bounded always, no measure needed</p></td>
+<td><p>No scalar product or projections</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\( C^0(\mathcal{X}) \)</span></p></td>
+<td><p>Weaker</p></td>
+<td><p>Continuous spectrum, topological tools</p></td>
+<td><p>Suitable for topological dynamics</p></td>
+<td><p>Spectrum may be more abstract</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sobolev / Hardy spaces</p></td>
+<td><p>Specialized</p></td>
+<td><p>Discrete spectrum, functional calculus</p></td>
+<td><p>Captures smoothness or analyticity</p></td>
+<td><p>May not be preserved under dynamics</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="koopman-eigenfunctions-and-the-point-spectrum">
+<h3>Koopman Eigenfunctions and the Point Spectrum<a class="headerlink" href="#koopman-eigenfunctions-and-the-point-spectrum" title="Link to this heading">#</a></h3>
+<p>Eigenfunctions of the Koopman operator encode <strong>structured, predictable modes</strong> of evolution. Each eigenfunction evolves <strong>multiplicatively</strong> over time, allowing us to interpret it as a decoupled dynamical mode.</p>
+<section id="koopman-eigenvalue-equation">
+<h4>Koopman Eigenvalue Equation<a class="headerlink" href="#koopman-eigenvalue-equation" title="Link to this heading">#</a></h4>
+<p>Let <span class="math notranslate nohighlight">\( \mathcal{K} \)</span> be the Koopman operator acting on a space of observables <span class="math notranslate nohighlight">\( \mathcal{F} \)</span>, such as <span class="math notranslate nohighlight">\( L^2_\mu(\mathcal{X}) \)</span> or <span class="math notranslate nohighlight">\( C^0(\mathcal{X}) \)</span>. A function <span class="math notranslate nohighlight">\( \varphi \in \mathcal{F} \)</span> is a <strong>Koopman eigenfunction</strong> with eigenvalue <span class="math notranslate nohighlight">\( \lambda \in \mathbb{C} \)</span> if</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{K} \varphi = \lambda \varphi.
+\]</div>
+<p>Since <span class="math notranslate nohighlight">\( \mathcal{K} \varphi(x) = \varphi(T(x)) \)</span>, the eigenvalue equation becomes:</p>
+<div class="math notranslate nohighlight">
+\[
+\varphi(T(x)) = \lambda \varphi(x), \quad \forall x \in \mathcal{X}.
+\]</div>
+<p>This means that as the system evolves under <span class="math notranslate nohighlight">\( T \)</span>, the value of the eigenfunction evolves geometrically:</p>
+<div class="math notranslate nohighlight">
+\[
+\varphi(T^t(x)) = \lambda^t \varphi(x), \quad \text{for all } t \in \mathbb{N}.
+\]</div>
+<p>Thus, Koopman eigenfunctions evolve <strong>exponentially</strong> (in modulus) or <strong>periodically</strong> (in phase) over time.</p>
+<div class="tip admonition">
+<p class="admonition-title">Remark: <em>Complex Koopman Eigenvalues</em></p>
+<p>Koopman eigenvalues are generally complex. This allows the operator to capture <strong>oscillatory behaviors</strong>, just as complex exponentials appear in Fourier analysis. If <span class="math notranslate nohighlight">\( \lambda = e^{i\omega} \)</span>, then</p>
+<div class="math notranslate nohighlight">
+\[
+\varphi(x_t) = \lambda^t \varphi(x_0) = e^{i\omega t} \varphi(x_0)
+\]</div>
+<p>describes <strong>pure periodic motion</strong> at frequency <span class="math notranslate nohighlight">\( \omega \)</span>.</p>
+</div>
+<p>The <strong>modulus</strong> of the eigenvalue <span class="math notranslate nohighlight">\( \lambda \)</span> reveals the <strong>stability or amplification</strong> of the corresponding mode:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\( |\lambda| = 1 \)</span>: <strong>Neutral mode</strong><br />
+The observable persists over time without growth or decay (e.g., rotations, conserved quantities).</p></li>
+<li><p><span class="math notranslate nohighlight">\( |\lambda| &lt; 1 \)</span>: <strong>Decaying mode</strong><br />
+The observable decays exponentially; often associated with <strong>attractors</strong> or <strong>transients</strong>.</p></li>
+<li><p><span class="math notranslate nohighlight">\( |\lambda| &gt; 1 \)</span>: <strong>Growing mode</strong><br />
+The observable grows exponentially — this only occurs if <span class="math notranslate nohighlight">\( \mathcal{K} \)</span> is <strong>unbounded</strong>.</p></li>
+</ul>
+</section>
+<section id="why-eigenfunctions-matter">
+<h4>Why Eigenfunctions Matter<a class="headerlink" href="#why-eigenfunctions-matter" title="Link to this heading">#</a></h4>
+<p>Koopman eigenfunctions provide a <strong>coordinate system</strong> in which the nonlinear evolution becomes diagonal:</p>
+<div class="math notranslate nohighlight">
+\[
+\varphi(x_t) = \lambda^t \varphi(x_0).
+\]</div>
+<p>This allows:</p>
+<ul class="simple">
+<li><p><strong>Modal decomposition</strong> of observables;</p></li>
+<li><p>Extraction of <strong>frequencies</strong> and <strong>growth rates</strong> in time series;</p></li>
+<li><p>Reduction of complex dynamics to simple exponential behaviors in the right basis.</p></li>
+</ul>
+<p>In data-driven contexts (e.g., DMD), the goal is often to <strong>approximate or recover</strong> Koopman eigenfunctions and eigenvalues from observations.</p>
+</section>
+</section>
+<section id="beyond-eigenvalues-the-full-koopman-spectrum">
+<h3>Beyond Eigenvalues: The Full Koopman Spectrum<a class="headerlink" href="#beyond-eigenvalues-the-full-koopman-spectrum" title="Link to this heading">#</a></h3>
+<p>While Koopman eigenfunctions provide valuable insight into the system’s modal structure, they are not always sufficient to describe long-term dynamics. Many systems, particularly those exhibiting chaos or mixing, require a more general spectral analysis.</p>
+<p>The Koopman operator is linear and bounded (on appropriate spaces), so its <strong>spectrum</strong> can be studied using tools from spectral theory — even when no eigenfunctions exist.</p>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>Koopman Spectrum</em></p>
+<p>Let <span class="math notranslate nohighlight">\( \mathcal{K} \)</span> be a bounded linear operator on a Banach space <span class="math notranslate nohighlight">\( \mathcal{F} \)</span>. The <strong>spectrum</strong> <span class="math notranslate nohighlight">\( \sigma(\mathcal{K}) \)</span> is the set of complex numbers <span class="math notranslate nohighlight">\( \lambda \in \mathbb{C} \)</span> for which the operator <span class="math notranslate nohighlight">\( (\mathcal{K} - \lambda I) \)</span> is not invertible.</p>
+</div>
+<p>The spectrum splits into three categories:</p>
+<ul class="simple">
+<li><p><strong>Point spectrum</strong>: values of <span class="math notranslate nohighlight">\( \lambda \)</span> for which <span class="math notranslate nohighlight">\( \mathcal{K} \varphi = \lambda \varphi \)</span> (eigenfunctions exist);</p></li>
+<li><p><strong>Continuous spectrum</strong>: <span class="math notranslate nohighlight">\( \mathcal{K} - \lambda I \)</span> is injective and has dense range, but no bounded inverse;</p></li>
+<li><p><strong>Residual spectrum</strong>: <span class="math notranslate nohighlight">\( \mathcal{K} - \lambda I \)</span> is injective, but the range is not dense.</p></li>
+</ul>
+<p>This trichotomy reflects the only ways in which invertibility can fail in infinite-dimensional spaces. Every <span class="math notranslate nohighlight">\( \lambda \in \sigma(\mathcal{K}) \)</span> must fall into <strong>one and only one</strong> of these categories.</p>
+<div class="dropdown admonition">
+<p class="admonition-title">More detail: How each part fits the spectrum definition</p>
+<p>Recall that a complex number <span class="math notranslate nohighlight">\( \lambda \in \mathbb{C} \)</span> belongs to the <strong>spectrum</strong> <span class="math notranslate nohighlight">\( \sigma(\mathcal{K}) \)</span> if the operator <span class="math notranslate nohighlight">\( \mathcal{K} - \lambda I \)</span> is <strong>not invertible</strong> as a bounded operator from <span class="math notranslate nohighlight">\( \mathcal{F} \to \mathcal{F} \)</span>. This can occur in exactly one of the following ways:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Condition</p></th>
+<th class="head"><p>Consequence</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\( \mathcal{K} - \lambda I \)</span> is <strong>not injective</strong></p></td>
+<td><p>There exists a nonzero <span class="math notranslate nohighlight">\( \varphi \)</span> such that <span class="math notranslate nohighlight">\( \mathcal{K} \varphi = \lambda \varphi \)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\( \mathcal{K} - \lambda I \)</span> is injective, has <strong>dense range</strong>, but <strong>no bounded inverse</strong></p></td>
+<td><p>Inverse exists algebraically, but solutions are unstable or diverge</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\( \mathcal{K} - \lambda I \)</span> is injective, but range is <strong>not dense</strong></p></td>
+<td><p>Some <span class="math notranslate nohighlight">\( g \in \mathcal{F} \)</span> have no approximating preimage</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>We now examine each spectral component and prove why invertibility fails.</p>
+<hr class="docutils" />
+<ul>
+<li><p><strong>Point spectrum</strong> (eigenvalues):</p>
+<p>There exists a nonzero <span class="math notranslate nohighlight">\( \varphi \in \mathcal{F} \)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[
+  \mathcal{K} \varphi = \lambda \varphi \quad \Rightarrow \quad (\mathcal{K} - \lambda I)\varphi = 0.
+  \]</div>
+<p>Hence, <span class="math notranslate nohighlight">\( \mathcal{K} - \lambda I \)</span> is <strong>not injective</strong>, so it is not invertible.<br />
+✅ Not invertible because the kernel is nontrivial.</p>
+</li>
+</ul>
+<hr class="docutils" />
+<ul>
+<li><p><strong>Continuous spectrum</strong>:</p>
+<p>The operator <span class="math notranslate nohighlight">\( \mathcal{K} - \lambda I \)</span> is <strong>injective</strong>, and its range is <strong>dense</strong>, but it has <strong>no bounded inverse</strong>.</p>
+<p>That is, although for every <span class="math notranslate nohighlight">\( g \in \mathcal{F} \)</span> and every <span class="math notranslate nohighlight">\( \varepsilon &gt; 0 \)</span>, we can find some <span class="math notranslate nohighlight">\( f \in \mathcal{F} \)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[
+  \|(\mathcal{K} - \lambda I)f - g\| &lt; \varepsilon,
+  \]</div>
+<p>there exists <strong>no continuous inverse</strong> mapping <span class="math notranslate nohighlight">\( g \mapsto f \)</span>.</p>
+<p>✅ Not invertible because the inverse (if it exists) is <strong>unbounded</strong>.</p>
+</li>
+</ul>
+<hr class="docutils" />
+<ul>
+<li><p><strong>Residual spectrum</strong>:</p>
+<p>The operator <span class="math notranslate nohighlight">\( \mathcal{K} - \lambda I \)</span> is <strong>injective</strong>, but its range is <strong>not dense</strong> in <span class="math notranslate nohighlight">\( \mathcal{F} \)</span>.<br />
+This means there exist functions <span class="math notranslate nohighlight">\( g \in \mathcal{F} \)</span> that cannot even be approximated arbitrarily well by elements in the range.</p>
+<p>So <span class="math notranslate nohighlight">\( \mathcal{K} - \lambda I \)</span> is not surjective, nor does it have dense range.<br />
+✅ Not invertible because the range is not dense — no inverse can be defined on all of <span class="math notranslate nohighlight">\( \mathcal{F} \)</span>.</p>
+</li>
+</ul>
+</div>
+<p>We now define the spectral radius</p>
+<div class="note admonition">
+<p class="admonition-title">Definition: <em>Spectral radius</em></p>
+<p>The <strong>spectral radius</strong> is given by</p>
+<div class="math notranslate nohighlight">
+\[
+\rho(\mathcal{K}) := \sup \{ |\lambda| : \lambda \in \sigma(\mathcal{K}) \}.
+\]</div>
+</div>
+<p>If <span class="math notranslate nohighlight">\( \mathcal{K} \)</span> is a contraction (e.g., when defined on <span class="math notranslate nohighlight">\( L^2_\mu \)</span> with <span class="math notranslate nohighlight">\( \mu \)</span> invariant), then <span class="math notranslate nohighlight">\( \rho(\mathcal{K}) \leq 1 \)</span>, so the spectrum lies inside or on the unit disk in the complex plane.</p>
+<div class="tip admonition">
+<p class="admonition-title">Remark: <em>Why the Continuous Spectrum Matters</em></p>
+<p>Even when Koopman eigenfunctions do not exist or are insufficient, the spectrum still encodes long-term features such as mixing, statistical decorrelation, and broadband frequency content. These are typically associated with the <strong>continuous</strong> part of the spectrum.</p>
+</div>
+<p>For example, in a strongly mixing system, the entire unit circle may belong to the continuous spectrum, with no nontrivial eigenfunctions. Yet observables still converge in distribution or decorrelate — phenomena fully captured by the operator’s spectrum.</p>
+</section>
+</section>
+<section id="canonical-examples">
+<h2>Canonical Examples<a class="headerlink" href="#canonical-examples" title="Link to this heading">#</a></h2>
+<p>We conclude this chapter with concrete examples illustrating the spectral behavior of the Koopman operator for well-understood dynamical systems. These help bridge the gap between abstract theory and explicit computation.</p>
+<section id="example-1-rotation-on-the-circle">
+<h3>Example 1: Rotation on the Circle<a class="headerlink" href="#example-1-rotation-on-the-circle" title="Link to this heading">#</a></h3>
+<p>Consider the circle <span class="math notranslate nohighlight">\( \mathbb{T} = \mathbb{R}/\mathbb{Z} \)</span>, and define the rotation map:
+$<span class="math notranslate nohighlight">\(
+T(x) = x + \alpha \mod 1,
+\)</span><span class="math notranslate nohighlight">\(
+where \)</span> \alpha \in \mathbb{R} $ is a fixed rotation angle.</p>
+<p>This is a classic example of a <strong>deterministic, measure-preserving</strong>, and <strong>non-mixing</strong> system. Its dynamics are simple but exhibit rich spectral structure depending on whether <span class="math notranslate nohighlight">\( \alpha \)</span> is rational or irrational.</p>
+<section id="invariant-measure">
+<h4>Invariant Measure<a class="headerlink" href="#invariant-measure" title="Link to this heading">#</a></h4>
+<p>The <strong>Lebesgue probability measure</strong> on <span class="math notranslate nohighlight">\( \mathbb{T} \)</span> is invariant:</p>
+<div class="math notranslate nohighlight">
+\[
+\mu(B) = \int_B dx, \quad \text{for } B \subset \mathbb{T}.
+\]</div>
+<p>Indeed, <span class="math notranslate nohighlight">\( T \)</span> is a translation, and Lebesgue measure is translation-invariant.</p>
+</section>
+<section id="koopman-operator-and-eigenfunctions">
+<h4>Koopman Operator and Eigenfunctions<a class="headerlink" href="#koopman-operator-and-eigenfunctions" title="Link to this heading">#</a></h4>
+<p>The Koopman operator <span class="math notranslate nohighlight">\( \mathcal{K} \)</span> acts on observables <span class="math notranslate nohighlight">\( f \in L^2(\mathbb{T}) \)</span> via composition:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{K} f(x) = f(T(x)) = f(x + \alpha).
+\]</div>
+<p>Let us consider the Fourier basis:</p>
+<div class="math notranslate nohighlight">
+\[
+\varphi_n(x) := e^{2\pi i n x}, \quad n \in \mathbb{Z}.
+\]</div>
+<p>Then,</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{K} \varphi_n(x) = \varphi_n(x + \alpha) = e^{2\pi i n (x + \alpha)} = e^{2\pi i n \alpha} \varphi_n(x).
+\]</div>
+<p>Hence, each <span class="math notranslate nohighlight">\( \varphi_n \)</span> is a Koopman eigenfunction with eigenvalue <span class="math notranslate nohighlight">\( \lambda_n = e^{2\pi i n \alpha} \)</span>. The Koopman spectrum is <strong>pure point</strong> and lies on the unit circle.</p>
+<div class="tip admonition">
+<p class="admonition-title">Interpretation</p>
+<p>Each Koopman eigenfunction <span class="math notranslate nohighlight">\( \varphi_n \)</span> represents an oscillatory mode at frequency <span class="math notranslate nohighlight">\( n \)</span>, and evolves as</p>
+<div class="math notranslate nohighlight">
+\[
+\varphi_n(T^t(x)) = e^{2\pi i n \alpha t} \varphi_n(x),
+\]</div>
+<p>which is a <strong>quasiperiodic signal</strong> unless <span class="math notranslate nohighlight">\( \alpha \in \mathbb{Q} \)</span>, in which case the orbit is periodic. The Koopman operator captures this perfectly via its discrete spectrum.</p>
+</div>
+</section>
+</section>
+<section id="example-2-doubling-map-on-0-1">
+<h3>Example 2: Doubling Map on <span class="math notranslate nohighlight">\([0,1]\)</span><a class="headerlink" href="#example-2-doubling-map-on-0-1" title="Link to this heading">#</a></h3>
+<p>We now consider a simple yet chaotic system: the <strong>doubling map</strong> defined on the interval <span class="math notranslate nohighlight">\([0,1]\)</span> by</p>
+<div class="math notranslate nohighlight">
+\[
+T(x) = 2x \mod 1.
+\]</div>
+<p>This map stretches and folds the unit interval, and is a classic example of a <strong>strongly mixing</strong>, <strong>expanding</strong>, and <strong>ergodic</strong> transformation.</p>
+<section id="id1">
+<h4>Invariant Measure<a class="headerlink" href="#id1" title="Link to this heading">#</a></h4>
+<p>The <strong>Lebesgue probability measure</strong> on <span class="math notranslate nohighlight">\([0,1]\)</span> is invariant:</p>
+<div class="math notranslate nohighlight">
+\[
+\mu(B) = \int_B dx, \quad \text{for } B \subset [0,1].
+\]</div>
+<p>This can be verified directly via change of variables or by noting that the preimages under <span class="math notranslate nohighlight">\( T \)</span> evenly divide the interval.</p>
+</section>
+<section id="koopman-operator-and-spectrum">
+<h4>Koopman Operator and Spectrum<a class="headerlink" href="#koopman-operator-and-spectrum" title="Link to this heading">#</a></h4>
+<p>Let <span class="math notranslate nohighlight">\( \mathcal{K} f(x) = f(T(x)) = f(2x \mod 1) \)</span> act on <span class="math notranslate nohighlight">\( L^2([0,1]) \)</span>.</p>
+<p>We ask whether <span class="math notranslate nohighlight">\( \mathcal{K} \)</span> has nontrivial eigenfunctions. Suppose <span class="math notranslate nohighlight">\( \mathcal{K} \varphi = \lambda \varphi \)</span>. Then</p>
+<div class="math notranslate nohighlight">
+\[
+\varphi(2x \mod 1) = \lambda \varphi(x).
+\]</div>
+<p>It turns out that the <strong>only</strong> <span class="math notranslate nohighlight">\( L^2 \)</span> eigenfunction is the constant function <span class="math notranslate nohighlight">\( \varphi(x) = 1 \)</span>, with eigenvalue <span class="math notranslate nohighlight">\( \lambda = 1 \)</span>. All other candidate eigenfunctions either:</p>
+<ul class="simple">
+<li><p>Are not measurable or square-integrable,</p></li>
+<li><p>Or correspond to frequencies that are destroyed by the folding and mixing of the system.</p></li>
+</ul>
+<p>Thus, the Koopman operator has <strong>no nontrivial point spectrum</strong> in <span class="math notranslate nohighlight">\( L^2([0,1]) \)</span>, and instead exhibits <strong>purely continuous spectrum</strong>.</p>
+<div class="tip admonition">
+<p class="admonition-title">Interpretation</p>
+<p>The absence of nontrivial eigenfunctions reflects the <strong>chaotic, mixing nature</strong> of the dynamics. While the system is deterministic and measure-preserving, observables rapidly lose correlation over time. Koopman analysis still applies, but not through modes — instead, the spectrum is continuous, reflecting a spread of frequencies and strong statistical mixing.</p>
+</div>
+</section>
+</section>
+<section id="example-3-squaring-map-on-0-1">
+<h3>Example 3: Squaring Map on <span class="math notranslate nohighlight">\([0,1]\)</span><a class="headerlink" href="#example-3-squaring-map-on-0-1" title="Link to this heading">#</a></h3>
+<p>Let <span class="math notranslate nohighlight">\( \mathcal{X} = [0,1] \)</span>, and consider the map</p>
+<div class="math notranslate nohighlight">
+\[
+T(x) = x^2.
+\]</div>
+<p>This transformation is continuous and strictly increasing on <span class="math notranslate nohighlight">\([0,1]\)</span>, with image <span class="math notranslate nohighlight">\( T([0,1]) = [0,1] \)</span>. Hence, <span class="math notranslate nohighlight">\( T \)</span> is <strong>invertible</strong> on this domain. However, the map <strong>compresses values toward 0</strong>, and does so <strong>very slowly near 1</strong>. This distortion plays a crucial role in the spectral properties of the associated Koopman operator.</p>
+<section id="id2">
+<h4>Invariant Measure<a class="headerlink" href="#id2" title="Link to this heading">#</a></h4>
+<p>We define the Koopman operator on <span class="math notranslate nohighlight">\( L^2([0,1]) \)</span> as</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{K} f(x) = f(x^2).
+\]</div>
+<p>Although Lebesgue measure is not invariant under <span class="math notranslate nohighlight">\( T \)</span>, the Koopman operator is still <strong>bounded</strong> on <span class="math notranslate nohighlight">\( L^2([0,1]) \)</span>, since composition with a measurable function preserves square integrability.</p>
+</section>
+<section id="id3">
+<h4>Koopman Operator and Spectrum<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
+<p>We now analyze the spectrum of <span class="math notranslate nohighlight">\( \mathcal{K} \)</span> acting on <span class="math notranslate nohighlight">\( L^2([0,1]) \)</span>.</p>
+<ol class="arabic">
+<li><p><strong>Point spectrum</strong>:<br />
+The constant function <span class="math notranslate nohighlight">\( \varphi(x) = 1 \)</span> satisfies <span class="math notranslate nohighlight">\( \mathcal{K} \varphi = \varphi \)</span>, so</p>
+<div class="math notranslate nohighlight">
+\[
+   \lambda = 1 \in \sigma_p(\mathcal{K}).
+   \]</div>
+<p>No other <span class="math notranslate nohighlight">\( L^2 \)</span> eigenfunctions exist — that is, for <span class="math notranslate nohighlight">\( \lambda \ne 1 \)</span>, there is no nontrivial <span class="math notranslate nohighlight">\( \varphi \in L^2 \)</span> such that <span class="math notranslate nohighlight">\( \mathcal{K} \varphi = \lambda \varphi \)</span>.</p>
+</li>
+<li><p><strong>Injectivity</strong>:<br />
+The operator <span class="math notranslate nohighlight">\( \mathcal{K} - \lambda I \)</span> is <strong>injective</strong> for all <span class="math notranslate nohighlight">\( \lambda \in \mathbb{C} \)</span>, since eigenfunctions do not exist except for <span class="math notranslate nohighlight">\( \lambda = 1 \)</span>.</p></li>
+<li><p><strong>Range not dense</strong>:<br />
+Although <span class="math notranslate nohighlight">\( \mathcal{K} \)</span> is injective, its <strong>range is not dense</strong> in <span class="math notranslate nohighlight">\( L^2([0,1]) \)</span>.<br />
+This is because the image of any function <span class="math notranslate nohighlight">\( f \mapsto f(x^2) \)</span> is distorted: since <span class="math notranslate nohighlight">\( x^2 \leq x \)</span>, the composition shifts the “information” of <span class="math notranslate nohighlight">\( f \)</span> toward smaller values of <span class="math notranslate nohighlight">\( x \)</span>. This makes it impossible for <span class="math notranslate nohighlight">\( \mathcal{K} f \)</span> to approximate functions that vary significantly near <span class="math notranslate nohighlight">\( x = 1 \)</span>, even in norm. Consequently, <span class="math notranslate nohighlight">\( \mathcal{K} - \lambda I \)</span> is not surjective and does not have dense range.</p></li>
+</ol>
+<div class="tip admonition">
+<p class="admonition-title">Interpretation</p>
+<p>The Koopman operator <span class="math notranslate nohighlight">\( \mathcal{K} f(x) = f(x^2) \)</span> is injective but has <strong>non-dense range</strong>, so for any <span class="math notranslate nohighlight">\( \lambda \ne 1 \)</span>, the operator <span class="math notranslate nohighlight">\( \mathcal{K} - \lambda I \)</span> is not invertible. This places <span class="math notranslate nohighlight">\( \lambda \in \sigma_r(\mathcal{K}) \)</span>, the <strong>residual spectrum</strong>.</p>
+<p>The residual spectrum arises because the composition <span class="math notranslate nohighlight">\( f(x^2) \)</span> cannot capture or approximate variations in <span class="math notranslate nohighlight">\( L^2 \)</span> functions near <span class="math notranslate nohighlight">\( x = 1 \)</span>. This is due to the fact that <span class="math notranslate nohighlight">\( x^2 \to 1 \)</span> <strong>very slowly</strong> as <span class="math notranslate nohighlight">\( x \to 1 \)</span>, causing the Koopman image to lack flexibility in that region.</p>
+</div>
+<p>The spectrum of the Koopman operator on <span class="math notranslate nohighlight">\( L^2([0,1]) \)</span> is:</p>
+<div class="math notranslate nohighlight">
+\[
+\sigma(\mathcal{K}) = \{1\} \cup \sigma_r(\mathcal{K}),
+\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\( \lambda = 1 \in \sigma_p(\mathcal{K}) \)</span> is the only eigenvalue,</p></li>
+<li><p>All other <span class="math notranslate nohighlight">\( \lambda \in \mathbb{C} \setminus \{1\} \)</span> lie in the <strong>residual spectrum</strong> <span class="math notranslate nohighlight">\( \sigma_r(\mathcal{K}) \)</span>,</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<p>This chapter developed a functional-analytic perspective on deterministic dynamics through the <strong>Koopman operator</strong>. By lifting nonlinear systems into a linear space of observables, we gained access to powerful tools from operator theory and spectral analysis.</p>
+<p>We explored:</p>
+<ul class="simple">
+<li><p>The duality between Koopman and Perron–Frobenius operators;</p></li>
+<li><p>The role of invariant measures in defining and analyzing Koopman operators;</p></li>
+<li><p>The impact of function space choice on boundedness and spectral properties;</p></li>
+<li><p>The classification of the spectrum into point, continuous, and residual parts;</p></li>
+<li><p>Concrete examples that illustrated each spectral type in action.</p></li>
+</ul>
+<p>This spectral viewpoint provides deep insight into long-term behavior, even when trajectories are complex or chaotic. In the next chapter, we shift to the <strong>data-driven approximation</strong> of Koopman operators, and how these theoretical ideas can be applied directly from observations.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="markov-chains.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Stochastic Dynamics and Markov Operators</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="data-driven-koopman.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Data-Driven Approximation of the Koopman Operator</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-markov-operators-to-koopman-operators">From Markov Operators to Koopman Operators</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deterministic-dynamical-systems">Deterministic Dynamical Systems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#primal-perspective">Primal Perspective</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dual-perspective">Dual Perspective</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#invariant-measures-and-operator-duality">Invariant Measures and Operator Duality</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functional-setting-and-invariant-measures">Functional Setting and Invariant Measures</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-function-spaces-for-observables">Common Function Spaces for Observables</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#invariant-measures-and-motivation">Invariant Measures and Motivation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#boundedness-of-the-koopman-operator">Boundedness of the Koopman Operator</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-boundedness-matters">Why Boundedness Matters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boundedness-on-l-p-mu-mathcal-x">Boundedness on <span class="math notranslate nohighlight">\( L^p_\mu(\mathcal{X}) \)</span></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#when-is-the-operator-bounded">When is the operator bounded?</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#what-if-mu-is-not-invariant">What if <span class="math notranslate nohighlight">\( \mu \)</span> is not invariant?</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boundedness-on-l-infty-mathcal-x">Boundedness on <span class="math notranslate nohighlight">\( L^\infty(\mathcal{X}) \)</span></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why this matters</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#boundedness-on-c-0-mathcal-x">Boundedness on <span class="math notranslate nohighlight">\( C^0(\mathcal{X}) \)</span></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#comments">Comments</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spectral-properties-of-koopman-operators">Spectral Properties of Koopman Operators</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#functional-spaces-and-their-spectral-implications">Functional Spaces and Their Spectral Implications</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#l-2-mu-mathcal-x-the-ideal-setting"><span class="math notranslate nohighlight">\(L^2_\mu(\mathcal{X})\)</span>: The ideal setting</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#l-infty-mathcal-x-bounded-but-no-inner-product"><span class="math notranslate nohighlight">\(L^\infty(\mathcal{X})\)</span>: Bounded, but no inner product</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#c-0-mathcal-x-continuous-dynamics"><span class="math notranslate nohighlight">\(C^0(\mathcal{X})\)</span>: Continuous dynamics</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sobolev-hardy-and-analytic-spaces">Sobolev, Hardy, and analytic spaces</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-spectral-behavior-by-function-space">Summary: Spectral Behavior by Function Space</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#koopman-eigenfunctions-and-the-point-spectrum">Koopman Eigenfunctions and the Point Spectrum</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#koopman-eigenvalue-equation">Koopman Eigenvalue Equation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#why-eigenfunctions-matter">Why Eigenfunctions Matter</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#beyond-eigenvalues-the-full-koopman-spectrum">Beyond Eigenvalues: The Full Koopman Spectrum</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#canonical-examples">Canonical Examples</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-rotation-on-the-circle">Example 1: Rotation on the Circle</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#invariant-measure">Invariant Measure</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#koopman-operator-and-eigenfunctions">Koopman Operator and Eigenfunctions</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-doubling-map-on-0-1">Example 2: Doubling Map on <span class="math notranslate nohighlight">\([0,1]\)</span></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Invariant Measure</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#koopman-operator-and-spectrum">Koopman Operator and Spectrum</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-3-squaring-map-on-0-1">Example 3: Squaring Map on <span class="math notranslate nohighlight">\([0,1]\)</span></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Invariant Measure</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Koopman Operator and Spectrum</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Jordan Patracone
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

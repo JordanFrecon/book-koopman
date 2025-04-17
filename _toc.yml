@@ -1,0 +1,11 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+chapters:
+- file: markov-chains
+- file: koopman-operator
+- file: data-driven-koopman
+- file: conformal-prediction
+- file: references
